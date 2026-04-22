@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>النخبة للحلول الإدارية – نظام إدارة المخازن والفروع</title>
+  <style>
+    :root{
+      --side-w:204px;--flyout-w:320px;--accent:#81b64c;--accent-strong:#6fa13f;--accent-soft:rgba(129,182,76,.16);
+      --bg:#20221e;--bg-deep:#171916;--nav:#242621;--nav-dark:#181a16;--panel:#2a2d28;--panel-2:#30332d;--panel-3:#373b34;
+      --line:rgba(255,255,255,.075);--line-2:rgba(255,255,255,.045);--text:#f2f5ef;--muted:#b7bfaf;--faint:#879080;
+      --danger:#d46458;--warning:#d4a243;--blue:#5b9bd5;--ok:#81b64c;--shadow:0 18px 46px rgba(0,0,0,.34);--soft-shadow:0 10px 24px rgba(0,0,0,.22);
+      --radius:8px;--radius-sm:6px;--tr:160ms ease;--row-h:40px;--cell-py:8px;--cell-px:11px;--table-font:12px;
+      --danger-soft:rgba(212,100,88,.14);--warning-soft:rgba(212,162,67,.14);--blue-soft:rgba(91,155,213,.14);--ok-soft:rgba(129,182,76,.14);
+    }
+    body[data-theme="green"]{--accent:#81b64c;--accent-strong:#6fa13f;--accent-soft:rgba(129,182,76,.16)}
+    body[data-theme="blue"]{--accent:#5297d2;--accent-strong:#3f82bb;--accent-soft:rgba(82,151,210,.16)}
+    body[data-theme="amber"]{--accent:#d9a441;--accent-strong:#bd8d31;--accent-soft:rgba(217,164,65,.16)}
+    body[data-theme="violet"]{--accent:#8b78d6;--accent-strong:#7361bd;--accent-soft:rgba(139,120,214,.16)}
+    body[data-theme="red"]{--accent:#cf6559;--accent-strong:#b95348;--accent-soft:rgba(207,101,89,.16)}
+    body[data-theme="slate"]{--accent:#99a29a;--accent-strong:#7e887f;--accent-soft:rgba(153,162,154,.16)}
+    body[data-density="comfortable"]{--row-h:54px;--cell-py:14px;--cell-px:15px;--table-font:13px}
+    body[data-density="middle"]{--row-h:46px;--cell-py:11px;--cell-px:13px;--table-font:12.5px}
+    body[data-density="compact"]{--row-h:38px;--cell-py:8px;--cell-px:11px;--table-font:12px}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:"Segoe UI",Tahoma,Arial,sans-serif;
+      overflow:hidden;
+      direction:rtl;
+    }
+    button,input,select,textarea{font-family:inherit}
+    button{cursor:pointer;border:0}
+    input,select,textarea{outline:0}
+    ::selection{background:var(--accent);color:#11140f}
+
+    .app{width:100vw;height:100vh;overflow:hidden;background:
+      radial-gradient(circle at 84% 8%, rgba(129,182,76,.07), transparent 34%),
+      radial-gradient(circle at 12% 86%, rgba(255,255,255,.035), transparent 30%),
+      var(--bg);position:relative}
+
+    /* Sidebar - نسخة المدير الأصلية 1:1 */
+    .rightbar{position:fixed;right:0;top:0;bottom:0;width:var(--side-w);background:var(--nav);border-left:1px solid var(--line-2);z-index:50;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.18)}
+    .brand{height:72px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:900;font-size:20px;color:#f4f4ef;letter-spacing:-.6px;user-select:none;padding:0 8px}.brand-logo{width:28px;height:28px;flex:0 0 28px;display:inline-block;background:var(--accent);-webkit-mask:url("data:image/png;base64,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") center/contain no-repeat;mask:url("data:image/png;base64,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") center/contain no-repeat;filter:drop-shadow(0 0 9px var(--accent-soft))}
+    .nav-scroll{padding:4px 0 12px;overflow-y:auto;overflow-x:hidden;flex:1;scrollbar-color:var(--accent) transparent;scrollbar-width:thin}.nav-scroll::-webkit-scrollbar{width:7px}.nav-scroll::-webkit-scrollbar-thumb{background:var(--accent);border-radius:12px}
+    .side-item{margin:1px 8px;min-height:36px;border-radius:4px;color:#e4e6df;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 9px 0 8px;transition:background var(--tr),color var(--tr);position:relative;user-select:none}.side-item:hover{background:#30332c;color:#fff}.side-item.active{background:var(--accent);color:#151711}.side-meta{display:flex;align-items:center;gap:8px;min-width:0}.ico{width:20px;text-align:center;font-size:14px}.label{font-size:12px;font-weight:760;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chev{font-size:18px;opacity:.7;transform:rotate(180deg)}
+    .side-bottom{border-top:1px solid var(--line-2);padding:10px 10px 12px;background:var(--nav-dark);display:flex;flex-direction:column;gap:8px}.mini-search{height:30px;border:1px solid var(--line);background:#20221d;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px;color:#bfc5b4;font-size:11px}.user-mini{display:flex;align-items:center;gap:8px;font-size:11px;color:#e6e8e1;background:#22241f;border-radius:5px;padding:7px;border:1px solid var(--line-2)}.avatar-mini{width:26px;height:26px;border-radius:7px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:900}.bottom-icons{display:flex;justify-content:space-between;color:#b8bead;font-size:13px;gap:5px}.bottom-icons span[data-save-now],.bottom-icons span[data-logout],.bottom-icons span[data-jump]{width:22px;height:22px;border-radius:5px;display:inline-grid;place-items:center;cursor:pointer;transition:background var(--tr),color var(--tr),transform var(--tr);position:relative}.bottom-icons span[data-save-now]:hover,.bottom-icons span[data-logout]:hover,.bottom-icons span[data-jump]:hover{background:var(--accent);color:#111;transform:translateY(-1px)}.bottom-icons span[data-save-now]:active,.bottom-icons span[data-logout]:active,.bottom-icons span[data-jump]:active{transform:translateY(0)}.badge-dot{display:inline-block;min-width:16px;height:16px;border-radius:16px;background:var(--danger);font-size:9px;text-align:center;line-height:16px;color:#fff;margin-inline-end:-6px;transform:translateY(-6px)}
+    .flyout{position:fixed;right:calc(var(--side-w) - 1px);width:var(--flyout-w);background:#292b26;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:0 8px 8px 0;z-index:60;padding:10px 0;opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity var(--tr),transform var(--tr);max-height:80vh;overflow:auto}.flyout.open{opacity:1;transform:translateX(0);pointer-events:auto}.flyout-title{height:42px;padding:0 15px;display:flex;align-items:center;justify-content:space-between;color:#f1f4ec;border-bottom:1px solid var(--line-2);margin-bottom:6px}.flyout-title strong{font-size:13px}.flyout-title small{color:var(--muted)}.flyout-opt{height:36px;margin:1px 9px;border-radius:4px;display:flex;align-items:center;justify-content:space-between;gap:9px;padding:0 10px;color:#d9ddd2;font-size:12px;font-weight:650;transition:background var(--tr),color var(--tr),padding var(--tr)}.flyout-opt:hover{background:#353832;color:#fff;padding-inline-start:14px}.flyout-opt.active{background:var(--accent);color:#111}.option-ico{font-size:13px;opacity:.85}
+
+    /* Workspace */
+    .workspace{height:100vh;margin-right:var(--side-w);padding:28px 32px;overflow:auto;transition:margin-right var(--tr);scrollbar-color:var(--accent) transparent;scrollbar-width:thin}
+    .workspace::-webkit-scrollbar{width:8px}.workspace::-webkit-scrollbar-thumb{background:var(--accent);border-radius:20px}
+
+    .top-strip{
+      min-height:54px;margin:-22px -24px 18px;padding:0 24px;background:rgba(0,0,0,.13);
+      border-bottom:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:16px;
+      position:sticky;top:-22px;z-index:20;backdrop-filter:blur(8px)
+    }
+    .crumb{display:flex;align-items:center;gap:9px;color:#acb3a5;font-size:12px;min-width:0}
+    .crumb b{color:#eef2eb;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .top-pill{height:30px;padding:0 10px;border-radius:999px;background:#2f322c;border:1px solid var(--line);color:#dfe5d8;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+    .top-user-actions{height:32px;display:inline-flex;align-items:center;gap:6px;background:#22241f;border:1px solid var(--line-2);border-radius:8px;padding:3px 5px 3px 6px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.015)}
+    .top-avatar{width:24px;height:24px;border-radius:7px;background:var(--accent);color:#111;display:grid;place-items:center;font-size:11px;font-weight:950;line-height:1}
+    .top-logout{width:24px;height:24px;border-radius:6px;background:transparent;color:#dfe5d8;border:1px solid transparent;display:grid;place-items:center;font-size:13px;line-height:1;transition:background var(--tr),color var(--tr),border-color var(--tr),transform var(--tr)}
+    .top-logout:hover{background:var(--danger-soft);color:#ffbdb6;border-color:rgba(212,100,88,.22);transform:translateY(-1px)}
+
+    .page{min-height:calc(100vh - 92px)}
+    .page-head{background:linear-gradient(180deg,var(--panel) 0%,#262922 100%);border:1px solid var(--line-2);border-radius:var(--radius);padding:15px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:var(--soft-shadow)}
+    .page-title{min-width:0}
+    .eyebrow{display:block;color:var(--accent);font-size:10.5px;font-weight:950;letter-spacing:.8px;margin-bottom:5px;text-transform:uppercase}
+    .page-title h1{margin:0;color:#fff;font-size:22px;letter-spacing:-.35px}
+    .page-title p{margin:7px 0 0;color:var(--muted);font-size:12px;line-height:1.7;max-width:780px}
+    .head-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+
+    /* Buttons */
+    .btn{height:32px;padding:0 12px;border-radius:var(--radius-sm);font-size:11.5px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;background:#2f322c;color:#dfe5d8;border:1px solid var(--line);transition:background var(--tr),color var(--tr),border-color var(--tr),transform var(--tr)}
+    .btn:hover{background:#363a32;color:#fff;transform:translateY(-1px)}
+    .btn.primary{background:var(--accent);color:#111;border-color:transparent}
+    .btn.primary:hover{background:var(--accent-strong);color:#111}
+    .btn.secondary{background:#2f322c;color:#dfe5d8}
+    .btn.success{background:var(--ok-soft);color:#dff7c6;border-color:rgba(129,182,76,.24)}
+    .btn.warning{background:var(--warning-soft);color:#ffdfa1;border-color:rgba(212,162,67,.22)}
+    .btn.danger{background:var(--danger-soft);color:#ffbdb6;border-color:rgba(212,100,88,.22)}
+    .btn.print{background:var(--blue-soft);color:#c3e3ff;border-color:rgba(91,155,213,.22)}
+    .btn.back{background:transparent;color:var(--muted)}
+    .btn.icon{width:32px;padding:0}
+    .btn.small{height:26px;padding:0 8px;font-size:10.5px}
+
+    /* Cards */
+    .summary-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}
+    .sum-card{background:linear-gradient(180deg,var(--panel) 0%,#272a25 100%);border:1px solid var(--line-2);border-radius:var(--radius);padding:15px;box-shadow:var(--soft-shadow);position:relative;overflow:hidden;min-height:102px}
+    .sum-card:before{content:"";position:absolute;top:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.74}
+    .sum-card span{display:block;color:var(--muted);font-size:11px;margin-bottom:7px;font-weight:800}
+    .sum-card strong{font-size:23px;color:#fff;letter-spacing:-.4px}
+    .sum-card small{display:block;color:var(--accent);margin-top:8px;font-weight:850;font-size:10.5px;line-height:1.5}
+    .sum-card.warn:before{background:linear-gradient(90deg,transparent,var(--warning),transparent)}
+    .sum-card.danger:before{background:linear-gradient(90deg,transparent,var(--danger),transparent)}
+    .sum-card.blue:before{background:linear-gradient(90deg,transparent,var(--blue),transparent)}
+
+    .content-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:start}
+    .section-card{background:var(--panel);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:var(--soft-shadow);overflow:hidden;margin-bottom:20px}
+    .section-head{height:48px;padding:0 13px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:10px;background:#2d302b}
+    .section-head h2,.section-head h3{margin:0;font-size:14px;color:#fff;font-weight:950}
+    .section-head small{color:var(--muted);font-size:11px;font-weight:800}
+    .section-body{padding:16px}
+
+    .alerts-list{display:grid;gap:8px}
+    .alert-item{display:flex;align-items:flex-start;gap:9px;padding:10px;border-radius:8px;background:#252822;border:1px solid var(--line-2)}
+    .alert-ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:0 0 30px;background:var(--accent-soft);color:var(--accent);font-weight:950}
+    .alert-item.warning .alert-ico{background:var(--warning-soft);color:#ffdca4}
+    .alert-item.danger .alert-ico{background:var(--danger-soft);color:#ffbfb8}
+    .alert-item b{display:block;font-size:12px;color:#fff;margin-bottom:3px}
+    .alert-item span{display:block;color:var(--muted);font-size:11px;line-height:1.6}
+
+    .quick-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+    .quick-card{min-height:76px;background:#252822;border:1px solid var(--line-2);border-radius:8px;padding:11px;display:flex;align-items:center;gap:9px;color:#fff;transition:background var(--tr),transform var(--tr),border-color var(--tr)}
+    .quick-card:hover{background:#30332d;border-color:rgba(129,182,76,.22);transform:translateY(-1px)}
+    .quick-card i{font-style:normal;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+    .quick-card b{display:block;font-size:12px;margin-bottom:4px}.quick-card span{font-size:10.5px;color:var(--muted)}
+
+    /* Tables and controls */
+    .toolbar{background:var(--panel);border:1px solid var(--line-2);border-radius:var(--radius);padding:12px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:var(--soft-shadow);flex-wrap:wrap}
+    .tool-right,.tool-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .control{height:32px;background:#22251f;border:1px solid var(--line);border-radius:var(--radius-sm);color:#f1f5ed;padding:0 9px;font-size:12px;min-width:130px}
+    .control.search{width:260px}.control::placeholder{color:#7d8578}
+    .table-card{background:var(--panel);border:1px solid var(--line-2);border-radius:var(--radius);overflow:hidden;box-shadow:var(--soft-shadow)}
+    .table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:980px}
+    th,td{height:var(--row-h);padding:8px 11px;border-bottom:1px solid rgba(255,255,255,.045);font-size:var(--table-font);text-align:right;white-space:nowrap}
+    th{color:#dce2d7;background:#30332d;font-size:11px;font-weight:950;position:sticky;top:0;z-index:2}
+    td{color:#eef1ea}tr:hover td{background:rgba(255,255,255,.025)}
+    .status{height:23px;border-radius:99px;padding:0 8px;display:inline-flex;align-items:center;font-size:10px;font-weight:900;border:1px solid var(--line)}
+    .status.ok{background:var(--ok-soft);color:#cdeaaf}.status.warn{background:var(--warning-soft);color:#ffd9a0}.status.danger{background:var(--danger-soft);color:#ffb9b1}.status.blue{background:var(--blue-soft);color:#c3e3ff}.status.muted{background:rgba(255,255,255,.05);color:var(--muted)}
+    .row-actions{display:flex;gap:5px;align-items:center}
+    .pager{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#272a25;border-top:1px solid var(--line-2);color:var(--muted);font-size:11px}
+    .empty{background:var(--panel);border:1px solid var(--line-2);border-radius:var(--radius);padding:34px;text-align:center;box-shadow:var(--soft-shadow);color:var(--muted)}
+    .empty b{display:block;color:#fff;font-size:15px;margin-bottom:10px}
+
+    .form-grid{display:grid;grid-template-columns:repeat(3,minmax(170px,1fr));gap:11px}
+    .field label{display:block;color:#dfe5d8;font-size:11px;font-weight:850;margin:0 2px 6px}
+    .form-control{width:100%;min-height:34px;background:#22251f;border:1px solid var(--line);border-radius:var(--radius-sm);color:#f1f5ed;padding:8px 9px;font-size:12px}
+    textarea.form-control{min-height:82px;resize:vertical;line-height:1.7}
+    .field.full{grid-column:1/-1}.form-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:13px;padding-top:12px;border-top:1px solid var(--line-2);flex-wrap:wrap}
+
+    .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .identity-card{padding:14px;display:grid;gap:12px}
+    .palette-row{display:flex;gap:8px;flex-wrap:wrap}.palette-chip{height:36px;border-radius:8px;border:1px solid var(--line);min-width:92px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+    @media(max-width:1320px){.summary-row{grid-template-columns:repeat(3,1fr)}.quick-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:1120px){:root{--side-w:174px}.workspace{padding:22px 18px}.top-strip{margin:-22px -18px 18px;padding:0 18px;top:-22px}.content-grid,.settings-grid{grid-template-columns:1fr}.summary-row{grid-template-columns:repeat(2,1fr)}.quick-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.page-head{align-items:flex-start;flex-direction:column}.control.search{width:100%}}
+    @media(max-width:720px){.summary-row,.quick-grid{grid-template-columns:1fr}.top-strip{align-items:flex-start;flex-direction:column;padding-top:10px;padding-bottom:10px}}
+  
+
+    /* Inventory interface interaction polish: subtle administrative hover only */
+    .side-item,
+    .sum-card,
+    .quick-card,
+    .btn,
+    .bottom-icons button,
+    tbody tr td,
+    .row-actions .btn{
+      will-change:transform, background-color, border-color, box-shadow;
+    }
+
+    .side-item:hover{
+      background:#30332c;
+      color:#fff;
+      transform:translateX(-1px);
+      box-shadow:inset 0 0 0 1px rgba(129,182,76,.10);
+    }
+
+    .sum-card{
+      transition:transform var(--tr), box-shadow var(--tr), border-color var(--tr), background var(--tr);
+    }
+    .sum-card:hover{
+      transform:translateY(-1px);
+      border-color:rgba(129,182,76,.16);
+      box-shadow:0 12px 28px rgba(0,0,0,.26);
+      background:linear-gradient(180deg,#2b2f29 0%,#282c26 100%);
+    }
+    .sum-card:hover:before{opacity:.9}
+
+    .quick-card{
+      transition:background var(--tr), transform var(--tr), border-color var(--tr), box-shadow var(--tr);
+    }
+    .quick-card:hover{
+      background:#30332d;
+      border-color:rgba(129,182,76,.22);
+      transform:translateY(-1px);
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+
+    .btn:hover{
+      background:#363a32;
+      color:#fff;
+      border-color:rgba(255,255,255,.11);
+      transform:translateY(-1px);
+      box-shadow:0 6px 14px rgba(0,0,0,.14);
+    }
+    .btn.primary:hover{
+      background:var(--accent-strong);
+      color:#111;
+      box-shadow:0 8px 18px rgba(129,182,76,.16);
+    }
+    .btn.danger:hover{
+      background:rgba(212,100,88,.20);
+      border-color:rgba(212,100,88,.30);
+      color:#ffd0ca;
+    }
+    .btn.warning:hover{
+      background:rgba(212,162,67,.20);
+      border-color:rgba(212,162,67,.30);
+      color:#ffe3ad;
+    }
+    .btn.print:hover{
+      background:rgba(91,155,213,.19);
+      border-color:rgba(91,155,213,.30);
+      color:#d8ecff;
+    }
+
+    tbody tr td{
+      transition:background-color var(--tr), color var(--tr), border-color var(--tr);
+    }
+    tbody tr:hover td{
+      background:rgba(255,255,255,.028);
+      border-bottom-color:rgba(129,182,76,.10);
+    }
+    tbody tr:hover td:first-child{
+      box-shadow:inset -2px 0 0 rgba(129,182,76,.35);
+    }
+
+    .row-actions .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .side-item,.sum-card,.quick-card,.btn,.bottom-icons button,tbody tr td,.row-actions .btn{
+        transition:none!important;
+        transform:none!important;
+      }
+    }
+
+    /* Final visual lock: readability and spacing only — no navigation or logic changes */
+    .brand,
+    #brandName{
+      color:#f7faf3 !important;
+      text-shadow:0 1px 2px rgba(0,0,0,.45);
+      font-weight:950;
+    }
+    #brandName{
+      max-width:calc(var(--side-w) - 52px);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .crumb > span:first-child{
+      color:#eef3e9 !important;
+      font-weight:900;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+      max-width:min(560px, 48vw);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .crumb b,
+    #crumbText{
+      color:#ffffff !important;
+      font-weight:950;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
+    .top-pill{
+      color:#edf3e9 !important;
+      background:#2b2e29;
+      border-color:rgba(255,255,255,.10);
+    }
+    .page-title h1,
+    .section-head h2,
+    .section-head h3,
+    .identity-card h3{
+      color:#ffffff !important;
+      text-shadow:0 1px 2px rgba(0,0,0,.28);
+    }
+    .identity-card p,
+    .page-title p,
+    .section-head small{
+      color:#c7d0bf !important;
+    }
+    .palette-chip{
+      color:#f8fff1 !important;
+      text-shadow:0 1px 2px rgba(0,0,0,.38);
+    }
+    .side-item .label{
+      letter-spacing:-.1px;
+    }
+    .side-item.active .label,
+    .side-item.active .ico,
+    .side-item.active .chev,
+    .flyout-opt.active{
+      font-weight:950;
+    }
+    .section-card,
+    .table-card,
+    .toolbar,
+    .page-head{
+      border-color:rgba(255,255,255,.07);
+    }
+    .page-head{
+      margin-bottom:18px;
+    }
+    .content-grid{
+      gap:22px;
+    }
+    .section-card{
+      margin-bottom:22px;
+    }
+    .toolbar{
+      margin-bottom:20px;
+    }
+    .row-actions{
+      gap:7px;
+    }
+    .btn{
+      min-width:fit-content;
+    }
+    @media(max-width:1120px){
+      .crumb > span:first-child{max-width:100%;}
+      #brandName{max-width:calc(var(--side-w) - 48px);}
+    }
+
+  
+
+    /* Sidebar professional outline icons - monochrome, calm, Elite-safe */
+    .ico{
+      width:20px!important;
+      height:20px!important;
+      flex:0 0 20px;
+      display:inline-flex!important;
+      align-items:center;
+      justify-content:center;
+      color:#b8bead;
+      opacity:.92;
+      font-size:0!important;
+      line-height:0;
+      transition:color var(--tr), opacity var(--tr), transform var(--tr);
+    }
+    .nav-svg{
+      width:18px;
+      height:18px;
+      display:block;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.85;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      vector-effect:non-scaling-stroke;
+    }
+    .side-item:hover .ico{color:#f2f5ef;opacity:1;transform:translateX(-1px)}
+    .side-item.active .ico{color:#151711;opacity:1;transform:none}
+    .flyout-title .flyout-title-icon{
+      width:18px;
+      height:18px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--accent);
+      vertical-align:middle;
+      margin-inline-end:7px;
+      transform:translateY(3px);
+    }
+    .flyout-title .flyout-title-icon .nav-svg{width:17px;height:17px}
+    .bottom-icons span[data-save-now],
+    .bottom-icons span[data-logout],
+    .bottom-icons span[data-jump]{
+      color:#b8bead;
+      font-size:0!important;
+      line-height:0;
+    }
+    .bottom-icons .nav-svg{width:15.5px;height:15.5px;stroke-width:1.9}
+    .bottom-icons span[data-save-now]:hover,
+    .bottom-icons span[data-logout]:hover,
+    .bottom-icons span[data-jump]:hover{color:#111}
+
+  </style>
+</head>
+<!-- v8: header clean - remove save and user text, icon logout near user -->
+<body data-density="middle" data-theme="green">
+<div class="app">
+  <aside class="rightbar">
+    <div class="brand"><span class="brand-logo" aria-hidden="true"></span><span id="brandName" title="النخبة للحلول الإدارية – نظام إدارة المخازن والفروع">النخبة للحلول الإدارية</span></div>
+    <div class="nav-scroll" id="navScroll"></div>
+    <div class="side-bottom">
+      <div class="mini-search" id="sideSearch"><span>⌕</span><span>البحث</span></div>
+      <div class="user-mini" id="sideUser"><div class="avatar-mini">م</div><strong id="sideUserName">مدير النظام</strong></div>
+      <div class="bottom-icons">
+        <span data-save-now title="حفظ فوري" aria-label="حفظ فوري"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v6h8V4"/><path d="M8 17h8"/></svg></span>
+        <span data-logout title="خروج" aria-label="خروج"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6H6v12h4"/><path d="M14 8l4 4-4 4"/><path d="M18 12H9"/></svg></span>
+        <span data-jump="settings" title="الإعدادات" aria-label="الإعدادات"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2.1-.5a7 7 0 0 0-.7-1.7l1.1-1.8-2.1-2.1-1.8 1.1a7 7 0 0 0-1.7-.7L11.2 2h-3l-.5 2.1a7 7 0 0 0-1.7.7L4.2 3.7 2.1 5.8l1.1 1.8a7 7 0 0 0-.7 1.7L.4 9.8v3l2.1.5a7 7 0 0 0 .7 1.7l-1.1 1.8 2.1 2.1 1.8-1.1a7 7 0 0 0 1.7.7l.5 2.1h3l.5-2.1a7 7 0 0 0 1.7-.7l1.8 1.1 2.1-2.1-1.1-1.8a7 7 0 0 0 .7-1.7z" transform="translate(2 1) scale(.86)"/></svg></span>
+        <span data-jump="dashboard" title="التنبيهات" aria-label="التنبيهات"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16H6c1.2-1.3 1.6-3 1.6-5.5A4.4 4.4 0 0 1 12 6a4.4 4.4 0 0 1 4.4 4.5c0 2.5.4 4.2 1.6 5.5z"/><path d="M10 19a2.2 2.2 0 0 0 4 0"/><path d="M12 4V3"/></svg></span>
+        <span data-jump="reports" title="التقارير" aria-label="التقارير"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M7 16v-5"/><path d="M12 16V7"/><path d="M17 16v-8"/></svg></span>
+        <span data-jump="users" title="المستخدمون" aria-label="المستخدمون"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M3.5 18c.8-3 2.5-4.5 5-4.5s4.2 1.5 5 4.5"/><path d="M16 11a2.5 2.5 0 1 0 0-5"/><path d="M15.5 13.5c2.2.2 3.7 1.7 4.2 4"/></svg></span>
+      </div>
+    </div>
+  </aside>
+  <div class="flyout" id="flyout"></div>
+<main class="workspace">
+    <div class="top-strip">
+      <div class="crumb"><span>النخبة للحلول الإدارية – نظام إدارة المخازن والفروع</span><span>•</span><b id="crumbText">لوحة التحكم</b></div>
+      <div class="top-actions">
+        <span class="top-pill">📅 <span id="dateText"></span></span>
+        <span class="top-pill">🔔 3 تنبيهات</span>
+        <div class="top-user-actions" aria-label="حساب المستخدم">
+          <span class="top-avatar" title="حساب المستخدم">م</span>
+          <button class="top-logout" type="button" data-logout title="خروج" aria-label="خروج">🚪</button>
+        </div>
+      </div>
+    </div>
+    <section class="page" id="page"></section>
+  </main>
+</div>
+
+<script>
+const sections = [
+  {key:'dashboard', label:'لوحة التحكم', icon:'dashboard', pages:[
+    {key:'dashboard', label:'لوحة التحكم'}
+  ]},
+  {key:'items', label:'الأصناف والتصنيفات', icon:'items', pages:[
+    {key:'items', label:'كل الأصناف'},
+    {key:'items_card', label:'بطاقة صنف'},
+    {key:'items_categories', label:'التصنيفات'},
+    {key:'items_low_stock', label:'الأصناف القريبة من النفاد'}
+  ]},
+  {key:'warehouses', label:'المخازن والفروع', icon:'warehouses', pages:[
+    {key:'warehouses', label:'كل المخازن والفروع'},
+    {key:'warehouses_add', label:'إضافة مخزن / فرع'},
+    {key:'warehouses_balances', label:'أرصدة حسب المخزن'}
+  ]},
+  {key:'inbound', label:'الوارد', icon:'inbound', pages:[
+    {key:'inbound', label:'كل الوارد'},
+    {key:'inbound_add', label:'تسجيل وارد'},
+    {key:'inbound_drafts', label:'مسودات الوارد'},
+    {key:'inbound_posted', label:'الوارد المرحل'}
+  ]},
+  {key:'outbound', label:'الصادر', icon:'outbound', pages:[
+    {key:'outbound', label:'كل الصادر'},
+    {key:'outbound_add', label:'تسجيل صادر'},
+    {key:'outbound_drafts', label:'مسودات الصادر'},
+    {key:'outbound_posted', label:'الصادر المرحل'}
+  ]},
+  {key:'transfers', label:'التحويل بين المخازن والفروع', icon:'transfers', pages:[
+    {key:'transfers', label:'كل التحويلات'},
+    {key:'transfers_send', label:'إرسال تحويل'},
+    {key:'transfers_receive', label:'استلام تحويل'},
+    {key:'transfers_pending', label:'التحويلات المعلقة'}
+  ]},
+  {key:'inventory', label:'الجرد', icon:'inventory', pages:[
+    {key:'inventory', label:'كل الجرد'},
+    {key:'inventory_full', label:'جرد كامل'},
+    {key:'inventory_partial', label:'جرد جزئي'},
+    {key:'inventory_differences', label:'فروقات الجرد'}
+  ]},
+  {key:'returns', label:'المرتجعات', icon:'returns', pages:[
+    {key:'returns', label:'كل المرتجعات'},
+    {key:'returns_add', label:'تسجيل مرتجع'},
+    {key:'returns_review', label:'قيد الفحص'}
+  ]},
+  {key:'damaged', label:'التالف والخسائر', icon:'damaged', pages:[
+    {key:'damaged', label:'كل التالف'},
+    {key:'damaged_add', label:'تسجيل تالف'},
+    {key:'damaged_losses', label:'تقرير الخسائر'}
+  ]},
+  {key:'suppliers', label:'الموردون', icon:'suppliers', pages:[
+    {key:'suppliers', label:'كل الموردين'},
+    {key:'suppliers_add', label:'إضافة مورد'},
+    {key:'suppliers_activity', label:'الوارد حسب المورد'}
+  ]},
+  {key:'reports', label:'التقارير', icon:'reports', pages:[
+    {key:'reports', label:'كل التقارير'},
+    {key:'reports_stock', label:'رصيد المخزون الحالي'},
+    {key:'reports_low_stock', label:'الأصناف الناقصة'},
+    {key:'reports_item_movement', label:'حركة صنف'},
+    {key:'reports_transfers', label:'التحويلات المعلقة'},
+    {key:'reports_inventory', label:'فروقات الجرد'}
+  ]},
+  {key:'users', label:'المستخدمون والصلاحيات', icon:'users', pages:[
+    {key:'users', label:'كل المستخدمين'},
+    {key:'users_add', label:'إضافة مستخدم'},
+    {key:'users_roles', label:'الأدوار والصلاحيات'}
+  ]},
+  {key:'ledger', label:'سجل الحركات', icon:'ledger', pages:[
+    {key:'ledger', label:'كل الحركات'},
+    {key:'ledger_filters', label:'بحث وتصفية'},
+    {key:'ledger_sensitive', label:'العمليات الحساسة'}
+  ]},
+  {key:'settings', label:'الإعدادات', icon:'settings', pages:[
+    {key:'settings', label:'إعدادات النشاط'},
+    {key:'settings_inventory', label:'إعدادات المخزون'},
+    {key:'settings_printing', label:'إعدادات الطباعة'},
+    {key:'settings_alerts', label:'إعدادات التنبيهات'}
+  ]},
+  {key:'backup', label:'النسخ الاحتياطي', icon:'backup', pages:[
+    {key:'backup', label:'النسخ الاحتياطي'},
+    {key:'backup_create', label:'أخذ نسخة'},
+    {key:'backup_restore', label:'استرجاع نسخة'}
+  ]}
+];
+
+const pageConfigs = {
+  dashboard:{title:'لوحة التحكم', desc:'متابعة تشغيلية مباشرة للمخزون، الحركات اليومية، التنبيهات، والتحويلات المعلقة.'},
+  items:{title:'الأصناف والتصنيفات', desc:'إدارة بطاقة الصنف، الكود، الباركود، الحد الأدنى، الرصيد، والتصنيفات.'},
+  warehouses:{title:'المخازن والفروع', desc:'تعريف المخازن والفروع وربط المستخدمين والحركات بكل جهة.'},
+  inbound:{title:'الوارد', desc:'تسجيل واردات المخزون مع دعم المسودة والترحيل وسندات الطباعة.'},
+  outbound:{title:'الصادر', desc:'صرف الأصناف من المخزن مع منع السالب وإظهار الرصيد قبل وبعد الصرف.'},
+  transfers:{title:'التحويل بين المخازن والفروع', desc:'إرسال واستلام التحويلات بمنطق مرحلتين وحالات رقابية واضحة.'},
+  inventory:{title:'الجرد', desc:'جرد كامل أو جزئي ومراجعة الفروقات قبل الترحيل.'},
+  returns:{title:'المرتجعات', desc:'إدارة المرتجعات وربطها بالحركة الأصلية وتحديد الصالح وغير الصالح.'},
+  damaged:{title:'التالف والخسائر', desc:'تسجيل التلف والخسائر مع سبب واضح وتأثير مستقل على المخزون.'},
+  suppliers:{title:'الموردون', desc:'بطاقات الموردين وربطهم بحركات الوارد وتقارير التعامل.'},
+  reports:{title:'التقارير', desc:'تقارير الرصيد، الحركة، الجرد، التحويلات، الموردين، والنقص.'},
+  users:{title:'المستخدمون والصلاحيات', desc:'إدارة المستخدمين والأدوار وصلاحيات المشاهدة والإضافة والترحيل والتصدير.'},
+  ledger:{title:'سجل الحركات', desc:'سجل رقابي تلقائي لا يقبل التعديل اليدوي للحركات الحساسة.'},
+  settings:{title:'الإعدادات', desc:'إعدادات النشاط، المخزون، الفروع، الطباعة، التنبيهات، والهوية.'},
+  backup:{title:'النسخ الاحتياطي', desc:'أخذ نسخة، استرجاع نسخة، ومتابعة تاريخ آخر نسخة.'}
+};
+
+const tableColumns = {
+  items:['كود الصنف','اسم الصنف','التصنيف','الوحدة','الرصيد الصافي','الحد الأدنى','آخر شراء','الحالة','إجراءات'],
+  warehouses:['الكود','المخزن / الفرع','النوع','المسؤول','عدد الأصناف','آخر حركة','الحالة','إجراءات'],
+  inbound:['رقم الوارد','التاريخ','المورد','المخزن','عدد الأصناف','الإجمالي','الحالة','المستخدم','إجراءات'],
+  outbound:['رقم الصادر','التاريخ','الجهة المستلمة','المخزن','نوع الصادر','عدد الأصناف','الحالة','إجراءات'],
+  transfers:['رقم التحويل','من','إلى','التاريخ','عدد الأصناف','الحالة','المستلم','إجراءات'],
+  inventory:['رقم الجرد','المخزن','نوع الجرد','التاريخ','الفروقات','الحالة','المستخدم','إجراءات'],
+  returns:['رقم المرتجع','الحركة الأصلية','الصنف','الكمية','الحالة','التأثير','إجراءات'],
+  damaged:['رقم التلف','الصنف','الكمية','السبب','المخزن','التاريخ','القيمة','إجراءات'],
+  suppliers:['كود المورد','اسم المورد','الهاتف','المسؤول','آخر تعامل','الحالة','إجراءات'],
+  reports:['اسم التقرير','المجموعة','الفترة','آخر تشغيل','حالة التقرير','إجراءات'],
+  users:['اسم المستخدم','الدور','المخزن/الفرع','الحالة','آخر دخول','الصلاحيات','إجراءات'],
+  ledger:['الوقت','المستخدم','القسم','نوع العملية','المرجع','المخزن/الفرع','الحالة','إجراءات'],
+  settings:['الإعداد','المجموعة','القيمة الحالية','الحالة','إجراءات'],
+  backup:['رقم النسخة','التاريخ','الحجم','النوع','المستخدم','الحالة','إجراءات']
+};
+
+const tableRows = {
+  items:[['IT-001','مادة عرض تجريبية','تصنيف عام','قطعة','0','5','—','<span class="status warn">قريب من النفاد</span>'],['IT-002','صنف بدون حركة','تصنيف عام','كارتون','0','10','—','<span class="status muted">لا توجد حركة</span>']],
+  warehouses:[['WH-01','المخزن الرئيسي','مخزن','مدير النظام','0','—','<span class="status ok">نشط</span>'],['BR-01','فرع الكرادة','فرع','مسؤول فرع','0','—','<span class="status ok">نشط</span>']],
+  inbound:[['IN-0001','اليوم','مورد تجريبي','المخزن الرئيسي','0','0 د.ع','<span class="status muted">مسودة</span>','مدير النظام']],
+  outbound:[['OUT-0001','اليوم','جهة داخلية','المخزن الرئيسي','صرف تشغيلي','0','<span class="status muted">مسودة</span>']],
+  transfers:[['TR-0001','المخزن الرئيسي','فرع الكرادة','اليوم','0','<span class="status warn">بانتظار الاستلام</span>','—']],
+  inventory:[['INV-0001','المخزن الرئيسي','جزئي','اليوم','0','<span class="status muted">قيد التنفيذ</span>','مدير النظام']],
+  returns:[['RET-0001','OUT-0001','صنف تجريبي','0','<span class="status blue">قيد الفحص</span>','لم يرحل']],
+  damaged:[['DMG-0001','صنف تجريبي','0','غير محدد','المخزن الرئيسي','اليوم','0 د.ع']],
+  suppliers:[['SUP-001','مورد تجريبي','—','—','—','<span class="status ok">نشط</span>']],
+  reports:[['رصيد المخزون الحالي','أرصدة ومخزون','اليوم','—','<span class="status ok">جاهز</span>'],['الأصناف الناقصة','أرصدة ومخزون','اليوم','—','<span class="status warn">يحتاج مراجعة</span>']],
+  users:[['مدير النظام','مدير النظام','كل المخازن','<span class="status ok">نشط</span>','اليوم','كاملة']],
+  ledger:[['اليوم 10:30','مدير النظام','النظام','تهيئة واجهة','SYS','عام','<span class="status ok">مسجل</span>']],
+  settings:[['منع السالب','إعدادات المخزون','مفعل','<span class="status ok">معتمد</span>'],['تنبيه النقص','التنبيهات','مفعل','<span class="status ok">معتمد</span>']],
+  backup:[['BK-0001','—','—','يدوي','مدير النظام','<span class="status muted">لا توجد نسخة بعد</span>']]
+};
+
+
+let active = 'dashboard';
+
+function sectionForPage(key){
+  return sections.find(s => s.key === key || (s.pages || []).some(p => p.key === key)) || sections[0];
+}
+function pageLabelForKey(key){
+  const sec = sectionForPage(key);
+  const pg = (sec.pages || []).find(p => p.key === key);
+  return pg ? pg.label : sec.label;
+}
+function rootKeyForPage(key){
+  return sectionForPage(key).key;
+}
+function pageDescriptionForKey(key){
+  const root = rootKeyForPage(key);
+  return (pageConfigs[root] || pageConfigs.dashboard).desc;
+}
+
+
+
+function navIcon(name){
+  const common = 'class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"';
+  const icons = {
+    dashboard:`<svg ${common}><rect x="4" y="4" width="6" height="6" rx="1.4"/><rect x="14" y="4" width="6" height="6" rx="1.4"/><rect x="4" y="14" width="6" height="6" rx="1.4"/><rect x="14" y="14" width="6" height="6" rx="1.4"/></svg>`,
+    items:`<svg ${common}><path d="M20 12l-8 8-8-8V4h8z"/><path d="M8.5 8.5h.01"/><path d="M12 4l8 8"/></svg>`,
+    warehouses:`<svg ${common}><path d="M4 10l8-5 8 5"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/><path d="M8 12h8"/></svg>`,
+    inbound:`<svg ${common}><path d="M12 4v10"/><path d="M8 10l4 4 4-4"/><path d="M5 18h14"/><path d="M6 14v4"/><path d="M18 14v4"/></svg>`,
+    outbound:`<svg ${common}><path d="M12 14V4"/><path d="M8 8l4-4 4 4"/><path d="M5 18h14"/><path d="M6 14v4"/><path d="M18 14v4"/></svg>`,
+    transfers:`<svg ${common}><path d="M7 7h11"/><path d="M15 4l3 3-3 3"/><path d="M17 17H6"/><path d="M9 14l-3 3 3 3"/></svg>`,
+    inventory:`<svg ${common}><path d="M8 4h8l1 2h3v15H4V6h3z"/><path d="M9 11h6"/><path d="M9 15h6"/><path d="M9 19h4"/></svg>`,
+    returns:`<svg ${common}><path d="M9 7l-5 5 5 5"/><path d="M5 12h11a4 4 0 0 1 0 8h-2"/><path d="M14 4h5v5"/></svg>`,
+    damaged:`<svg ${common}><path d="M12 3l9 16H3z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`,
+    suppliers:`<svg ${common}><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/><path d="M5 11h5"/></svg>`,
+    reports:`<svg ${common}><path d="M4 19h16"/><path d="M7 16v-5"/><path d="M12 16V7"/><path d="M17 16v-8"/></svg>`,
+    users:`<svg ${common}><path d="M12 3l7 3v5c0 4.5-2.8 7.2-7 9-4.2-1.8-7-4.5-7-9V6z"/><path d="M12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M8.8 15c.7-1.6 1.8-2.4 3.2-2.4s2.5.8 3.2 2.4"/></svg>`,
+    ledger:`<svg ${common}><path d="M6 4h12v16H6z"/><path d="M9 8h6"/><path d="M9 12h6"/><path d="M9 16h4"/><path d="M4 7h2"/><path d="M4 12h2"/><path d="M4 17h2"/></svg>`,
+    settings:`<svg ${common}><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2.1-.5a7 7 0 0 0-.7-1.7l1.1-1.8-2.1-2.1-1.8 1.1a7 7 0 0 0-1.7-.7L11.2 2h-3l-.5 2.1a7 7 0 0 0-1.7.7L4.2 3.7 2.1 5.8l1.1 1.8a7 7 0 0 0-.7 1.7L.4 9.8v3l2.1.5a7 7 0 0 0 .7 1.7l-1.1 1.8 2.1 2.1 1.8-1.1a7 7 0 0 0 1.7.7l.5 2.1h3l.5-2.1a7 7 0 0 0 1.7-.7l1.8 1.1 2.1-2.1-1.1-1.8a7 7 0 0 0 .7-1.7z" transform="translate(2 1) scale(.86)"/></svg>`,
+    backup:`<svg ${common}><ellipse cx="12" cy="5" rx="7" ry="3"/><path d="M5 5v10c0 1.7 3.1 3 7 3s7-1.3 7-3V5"/><path d="M5 10c0 1.7 3.1 3 7 3s7-1.3 7-3"/><path d="M15 17l2 2 3-4"/></svg>`
+  };
+  return icons[name] || icons.dashboard;
+}
+
+function renderNav(){
+  const nav = document.getElementById('navScroll');
+  const activeSection = rootKeyForPage(active);
+  nav.innerHTML = sections.map(s=>`
+    <div class="side-item ${s.key===activeSection?'active':''}" data-section="${s.key}" title="${s.label}">
+      <div class="side-meta"><span class="ico">${navIcon(s.icon)}</span><span class="label">${s.label}</span></div>
+      <span class="chev">›</span>
+    </div>`).join('');
+}
+
+function openFlyout(sec, anchor){
+  const flyout = document.getElementById('flyout');
+  if(!sec || !flyout) return;
+  const pages = sec.pages || [{key:sec.key,label:sec.label}];
+  flyout.innerHTML = `
+    <div class="flyout-title"><strong><span class="flyout-title-icon">${navIcon(sec.icon)}</span>${sec.label}</strong><small>${pages.length}</small></div>
+    ${pages.map(p=>`<div class="flyout-opt ${p.key===active?'active':''}" data-page="${p.key}"><span>${p.label}</span><span class="option-ico">↵</span></div>`).join('')}
+  `;
+  const r = anchor.getBoundingClientRect();
+  flyout.style.top = Math.min(r.top, window.innerHeight - 120) + 'px';
+  flyout.classList.add('open');
+}
+
+
+function pageHead(cfg){
+  return `<div class="page-head">
+    <div class="page-title"><span class="eyebrow">نظام إدارة المخازن والفروع</span><h1>${cfg.title}</h1><p>${cfg.desc}</p></div>
+    <div class="head-badges"><span class="top-pill">النخبة للحلول الإدارية – نظام إدارة المخازن والفروع</span></div>
+  </div>`;
+}
+
+function dashboard(){
+  return `${pageHead(pageConfigs.dashboard)}
+  <div class="summary-row dashboard-summary">
+    <div class="sum-card"><span>إجمالي الأصناف</span><strong>128</strong><small>مرتبط بالتصنيفات والباركود</small></div>
+    <div class="sum-card"><span>إجمالي الوارد</span><strong>0</strong><small>خلال اليوم</small></div>
+    <div class="sum-card"><span>إجمالي الصادر</span><strong>0</strong><small>خلال اليوم</small></div>
+    <div class="sum-card warn"><span>تحويلات معلقة</span><strong>3</strong><small>بانتظار الاستلام</small></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><h2>التنبيهات</h2><small>نقاط خطر</small></div>
+    <div class="section-body alerts-list">
+      <div class="alert-item danger"><div class="alert-ico">!</div><div><b>نقص مخزون</b><span>6 أصناف وصلت أو اقتربت من الحد الأدنى.</span></div></div>
+      <div class="alert-item warning"><div class="alert-ico">↔</div><div><b>تحويلات معلقة</b><span>3 تحويلات مرسلة ولم يتم تأكيد استلامها بعد.</span></div></div>
+      <div class="alert-item"><div class="alert-ico">⌁</div><div><b>جرد متأخر</b><span>فرع واحد يحتاج مراجعة جرد خلال الفترة الحالية.</span></div></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><h2>آخر الحركات</h2><small>عرض رقابي سريع</small></div>
+    <div class="section-body" style="padding:0">${buildTable(['الوقت','القسم','العملية','المخزن/الفرع','الحالة','إجراءات'], [
+      ['10:30','النظام','تهيئة واجهة المخزن','عام','<span class="status ok">مسجل</span>'],
+      ['09:50','التحويل','تحويل بانتظار الاستلام','فرع الكرادة','<span class="status warn">معلق</span>'],
+      ['09:10','الأصناف','تنبيه حد أدنى','المخزن الرئيسي','<span class="status danger">نقص</span>']
+    ], false)}</div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><h2>وصول سريع</h2><small>عمليات يومية</small></div>
+    <div class="section-body quick-grid">
+      <button class="quick-card" data-jump="inbound"><i>📥</i><span><b>تسجيل وارد</b><span>استلام بضاعة وترحيل</span></span></button>
+      <button class="quick-card" data-jump="outbound"><i>📤</i><span><b>تسجيل صادر</b><span>صرف مع منع السالب</span></span></button>
+      <button class="quick-card" data-jump="transfers"><i>🔁</i><span><b>تحويل مخزني</b><span>إرسال واستلام</span></span></button>
+      <button class="quick-card" data-jump="inventory"><i>🧮</i><span><b>بدء جرد</b><span>كامل أو جزئي</span></span></button>
+      <button class="quick-card" data-jump="reports"><i>📈</i><span><b>التقارير</b><span>رصيد وحركة وفروقات</span></span></button>
+    </div>
+  </div>`;
+}
+function buildTable(cols, rows, withPager=true){
+  return `<div class="table-card"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><div class="row-actions"><button class="btn small secondary">عرض</button><button class="btn small primary">تعديل</button></div></td></tr>`).join('')}</tbody></table></div>${withPager?`<div class="pager"><span>عدد السجلات: ${rows.length}</span><span>صفحة 1</span></div>`:''}</div>`;
+}
+
+function genericPage(key){
+  const cfg = pageConfigs[key];
+  const cols = tableColumns[key] || ['البيان','القيمة','الحالة','إجراءات'];
+  const rows = tableRows[key] || [];
+  return `${pageHead(cfg)}
+    <div class="summary-row">
+      <div class="sum-card"><span>إجمالي السجلات</span><strong>${rows.length}</strong><small>حسب الفلتر الحالي</small></div>
+      <div class="sum-card blue"><span>نشط</span><strong>${Math.max(0, rows.length-1)}</strong><small>جاهز للعمل</small></div>
+      <div class="sum-card warn"><span>بانتظار مراجعة</span><strong>1</strong><small>يتطلب انتباه</small></div>
+      <div class="sum-card danger"><span>تنبيهات</span><strong>${key==='items'?6:0}</strong><small>ضمن هذا القسم</small></div>
+    </div>
+    <div class="toolbar">
+      <div class="tool-right"><input class="control search" placeholder="بحث..."><select class="control"><option>كل الحالات</option><option>نشط</option><option>مسودة</option><option>معلق</option></select><input class="control" type="date"></div>
+      <div class="tool-left"><button class="btn primary">＋ إضافة</button><button class="btn success">اعتماد / ترحيل</button><button class="btn print">طباعة / PDF</button><button class="btn secondary">تصدير</button><button class="btn back">رجوع</button></div>
+    </div>
+    ${buildTable(cols, rows)}`;
+}
+
+function settingsPage(){
+  return `${pageHead(pageConfigs.settings)}
+    <div class="settings-grid">
+      <div class="section-card identity-card">
+        <div><span class="eyebrow">هوية النظام</span><h3 style="margin:0;color:#fff">الهوية البصرية المعتمدة</h3></div>
+        <p style="margin:0;color:var(--muted);font-size:12px;line-height:1.8">تم تثبيت الهوية الداكنة المعتمدة للنظام: قوية، عملية، واضحة، وبدون إدخال طابع بوتيك أو فخامة ناعمة.</p>
+        <div class="palette-row">
+          <div class="palette-chip" style="background:#20221e">الخلفية</div>
+          <div class="palette-chip" style="background:#242621">السايدبار</div>
+          <div class="palette-chip" style="background:#2a2d28">اللوحات</div>
+          <div class="palette-chip" style="background:#81b64c;color:#f8fff1;text-shadow:0 1px 2px rgba(0,0,0,.35)">اللون الأساسي</div>
+        </div>
+      </div>
+      <div class="section-card identity-card">
+        <div><span class="eyebrow">قواعد الواجهة</span><h3 style="margin:0;color:#fff">قواعد الواجهة</h3></div>
+        <div class="alerts-list">
+          <div class="alert-item"><div class="alert-ico">✓</div><div><b>لا Hero ولا Top Navigation</b><span>السايدبار هو محور التنقل.</span></div></div>
+          <div class="alert-item"><div class="alert-ico">✓</div><div><b>كروت وجداول واضحة</b><span>أولوية للمعلومة قبل الزينة.</span></div></div>
+          <div class="alert-item warning"><div class="alert-ico">!</div><div><b>الثيم ليس مجرد Accent</b><span>تم تثبيت الثيم الأساسي بدل تبديل ألوان ضعيف.</span></div></div>
+        </div>
+      </div>
+    </div>
+    `;
+}
+
+function render(){
+  renderNav();
+  const root = rootKeyForPage(active);
+  const cfg = pageConfigs[root] || pageConfigs.dashboard;
+  const title = pageLabelForKey(active);
+  document.getElementById('crumbText').textContent = title;
+  if(root === 'dashboard') document.getElementById('page').innerHTML = dashboard();
+  else if(root === 'settings') document.getElementById('page').innerHTML = settingsPage();
+  else document.getElementById('page').innerHTML = genericPage(root);
+}
+
+
+document.addEventListener('click', e=>{
+  const side = e.target.closest('[data-section]');
+  if(side){
+    const sec = sections.find(s=>s.key === side.dataset.section);
+    openFlyout(sec, side);
+    return;
+  }
+
+  const pageOpt = e.target.closest('[data-page]');
+  if(pageOpt){
+    active = pageOpt.dataset.page;
+    document.getElementById('flyout')?.classList.remove('open');
+    render();
+    return;
+  }
+
+  const jump = e.target.closest('[data-jump]');
+  if(jump){
+    active = jump.dataset.jump;
+    document.getElementById('flyout')?.classList.remove('open');
+    render();
+    return;
+  }
+
+  if(e.target.closest('#sideSearch')){
+    alert('البحث السريع جاهز للربط لاحقًا مع قاعدة البيانات.');
+    return;
+  }
+
+  if(e.target.closest('[data-save-now]')){
+    alert('تم الحفظ التجريبي.');
+    return;
+  }
+
+  if(e.target.closest('[data-logout]')){
+    alert('تسجيل الخروج جاهز للربط.');
+    return;
+  }
+
+  if(!e.target.closest('.rightbar') && !e.target.closest('.flyout')){
+    document.getElementById('flyout')?.classList.remove('open');
+  }
+});
+
+
+document.getElementById('dateText').textContent = new Date().toLocaleDateString('ar-IQ',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+render();
+</script>
+</body>
+</html>
