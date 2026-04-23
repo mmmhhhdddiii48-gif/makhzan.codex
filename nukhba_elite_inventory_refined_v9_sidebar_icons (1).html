@@ -559,7 +559,15 @@ const tableRows = {
 };
 
 
-let active = 'dashboard';
+const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
+
+const appState = {
+  activePage:'dashboard',
+  tableRows: typeof structuredClone === 'function' ? structuredClone(tableRows) : deepClone(tableRows),
+  backups: [],
+  lastBackupId: 1,
+  role: 'مدير النظام'
+};
 
 function sectionForPage(key){
   return sections.find(s => s.key === key || (s.pages || []).some(p => p.key === key)) || sections[0];
@@ -603,7 +611,7 @@ function navIcon(name){
 
 function renderNav(){
   const nav = document.getElementById('navScroll');
-  const activeSection = rootKeyForPage(active);
+  const activeSection = rootKeyForPage(appState.activePage);
   nav.innerHTML = sections.map(s=>`
     <div class="side-item ${s.key===activeSection?'active':''}" data-section="${s.key}" title="${s.label}">
       <div class="side-meta"><span class="ico">${navIcon(s.icon)}</span><span class="label">${s.label}</span></div>
@@ -617,7 +625,7 @@ function openFlyout(sec, anchor){
   const pages = sec.pages || [{key:sec.key,label:sec.label}];
   flyout.innerHTML = `
     <div class="flyout-title"><strong><span class="flyout-title-icon">${navIcon(sec.icon)}</span>${sec.label}</strong><small>${pages.length}</small></div>
-    ${pages.map(p=>`<div class="flyout-opt ${p.key===active?'active':''}" data-page="${p.key}"><span>${p.label}</span><span class="option-ico">↵</span></div>`).join('')}
+    ${pages.map(p=>`<div class="flyout-opt ${p.key===appState.activePage?'active':''}" data-page="${p.key}"><span>${p.label}</span><span class="option-ico">↵</span></div>`).join('')}
   `;
   const r = anchor.getBoundingClientRect();
   flyout.style.top = Math.min(r.top, window.innerHeight - 120) + 'px';
@@ -675,9 +683,11 @@ function buildTable(cols, rows, withPager=true){
 }
 
 function genericPage(key){
-  const cfg = pageConfigs[key];
+  const root = rootKeyForPage(key);
+  const cfg = pageConfigs[root];
   const cols = tableColumns[key] || ['البيان','القيمة','الحالة','إجراءات'];
-  const rows = tableRows[key] || [];
+  const rows = appState.tableRows[key] || [];
+  const canApprove = appState.role === 'مدير النظام';
   return `${pageHead(cfg)}
     <div class="summary-row">
       <div class="sum-card"><span>إجمالي السجلات</span><strong>${rows.length}</strong><small>حسب الفلتر الحالي</small></div>
@@ -687,9 +697,19 @@ function genericPage(key){
     </div>
     <div class="toolbar">
       <div class="tool-right"><input class="control search" placeholder="بحث..."><select class="control"><option>كل الحالات</option><option>نشط</option><option>مسودة</option><option>معلق</option></select><input class="control" type="date"></div>
-      <div class="tool-left"><button class="btn primary">＋ إضافة</button><button class="btn success">اعتماد / ترحيل</button><button class="btn print">طباعة / PDF</button><button class="btn secondary">تصدير</button><button class="btn back">رجوع</button></div>
+      <div class="tool-left">
+        <button class="btn primary" data-action="add-row" data-key="${key}">＋ إضافة</button>
+        <button class="btn success" data-action="approve" data-key="${key}" ${canApprove ? '' : 'style="display:none"'}>اعتماد / ترحيل</button>
+        <button class="btn print">طباعة / PDF</button>
+        <button class="btn secondary" data-action="export">تصدير</button>
+        <button class="btn back" data-action="go-back">رجوع</button>
+      </div>
     </div>
-    ${buildTable(cols, rows)}`;
+    ${buildTable(cols, rows)}
+    ${key==='backup' ? `<div class="form-actions" style="padding:12px">
+      <button class="btn primary" data-action="backup-create">أخذ نسخة</button>
+      <button class="btn warning" data-action="backup-restore">استرجاع آخر نسخة</button>
+    </div>` : ''}`;
 }
 
 function settingsPage(){
@@ -719,13 +739,40 @@ function settingsPage(){
 
 function render(){
   renderNav();
-  const root = rootKeyForPage(active);
+  const root = rootKeyForPage(appState.activePage);
   const cfg = pageConfigs[root] || pageConfigs.dashboard;
-  const title = pageLabelForKey(active);
+  const title = pageLabelForKey(appState.activePage);
   document.getElementById('crumbText').textContent = title;
   if(root === 'dashboard') document.getElementById('page').innerHTML = dashboard();
   else if(root === 'settings') document.getElementById('page').innerHTML = settingsPage();
-  else document.getElementById('page').innerHTML = genericPage(root);
+  else document.getElementById('page').innerHTML = genericPage(appState.activePage);
+}
+
+function appendLedger(actionType, section){
+  const when = new Date().toLocaleTimeString('ar-IQ',{hour:'2-digit',minute:'2-digit'});
+  appState.tableRows.ledger = appState.tableRows.ledger || [];
+  appState.tableRows.ledger.unshift([`${when}`,'مدير النظام',section,actionType,'UI',section,'<span class="status ok">مسجل</span>']);
+}
+
+function createBackup(){
+  const id = `BK-${String(appState.lastBackupId++).padStart(4,'0')}`;
+  const now = new Date().toLocaleDateString('ar-IQ');
+  const entry = [id,now,'1.2MB','يدوي','مدير النظام','<span class="status ok">تم الإنشاء</span>'];
+  appState.tableRows.backup.unshift(entry);
+  appState.backups.unshift(entry);
+  appendLedger('إنشاء نسخة احتياطية','النسخ الاحتياطي');
+}
+
+function restoreBackup(){
+  const latest = appState.backups[0];
+  if(!latest){
+    alert('لا توجد نسخة متاحة للاسترجاع.');
+    return;
+  }
+  latest[5] = '<span class="status blue">تم الاسترجاع</span>';
+  const row = appState.tableRows.backup.find(r => r[0] === latest[0]);
+  if(row) row[5] = '<span class="status blue">تم الاسترجاع</span>';
+  appendLedger(`استرجاع نسخة ${latest[0]}`,'النسخ الاحتياطي');
 }
 
 
@@ -739,7 +786,7 @@ document.addEventListener('click', e=>{
 
   const pageOpt = e.target.closest('[data-page]');
   if(pageOpt){
-    active = pageOpt.dataset.page;
+    appState.activePage = pageOpt.dataset.page;
     document.getElementById('flyout')?.classList.remove('open');
     render();
     return;
@@ -747,10 +794,49 @@ document.addEventListener('click', e=>{
 
   const jump = e.target.closest('[data-jump]');
   if(jump){
-    active = jump.dataset.jump;
+    appState.activePage = jump.dataset.jump;
     document.getElementById('flyout')?.classList.remove('open');
     render();
     return;
+  }
+
+  const action = e.target.closest('[data-action]');
+  if(action){
+    const {action: type, key} = action.dataset;
+    if(type === 'add-row' && key){
+      const targetRows = appState.tableRows[key] || [];
+      const ref = targetRows[0] || Array((tableColumns[key] || []).length - 1).fill('—');
+      targetRows.unshift(ref.map((v, i)=> i===0 ? `${key.toUpperCase().slice(0,3)}-${String(targetRows.length+1).padStart(4,'0')}` : v));
+      appState.tableRows[key] = targetRows;
+      appendLedger('إضافة سجل', pageLabelForKey(key));
+      render();
+      return;
+    }
+    if(type === 'approve' && key){
+      appendLedger('اعتماد / ترحيل', pageLabelForKey(key));
+      alert('تم تنفيذ الاعتماد التجريبي.');
+      return;
+    }
+    if(type === 'export'){
+      appendLedger('تصدير بيانات', pageLabelForKey(appState.activePage));
+      alert('تم تجهيز ملف التصدير التجريبي.');
+      return;
+    }
+    if(type === 'go-back'){
+      appState.activePage = rootKeyForPage(appState.activePage);
+      render();
+      return;
+    }
+    if(type === 'backup-create'){
+      createBackup();
+      render();
+      return;
+    }
+    if(type === 'backup-restore'){
+      restoreBackup();
+      render();
+      return;
+    }
   }
 
   if(e.target.closest('#sideSearch')){
