@@ -422,88 +422,21 @@
 
 <script>
 const sections = [
-  {key:'dashboard', label:'لوحة التحكم', icon:'dashboard', pages:[
-    {key:'dashboard', label:'لوحة التحكم'}
-  ]},
-  {key:'items', label:'الأصناف والتصنيفات', icon:'items', pages:[
-    {key:'items', label:'كل الأصناف'},
-    {key:'items_card', label:'بطاقة صنف'},
-    {key:'items_categories', label:'التصنيفات'},
-    {key:'items_low_stock', label:'الأصناف القريبة من النفاد'}
-  ]},
-  {key:'warehouses', label:'المخازن والفروع', icon:'warehouses', pages:[
-    {key:'warehouses', label:'كل المخازن والفروع'},
-    {key:'warehouses_add', label:'إضافة مخزن / فرع'},
-    {key:'warehouses_balances', label:'أرصدة حسب المخزن'}
-  ]},
-  {key:'inbound', label:'الوارد', icon:'inbound', pages:[
-    {key:'inbound', label:'كل الوارد'},
-    {key:'inbound_add', label:'تسجيل وارد'},
-    {key:'inbound_drafts', label:'مسودات الوارد'},
-    {key:'inbound_posted', label:'الوارد المرحل'}
-  ]},
-  {key:'outbound', label:'الصادر', icon:'outbound', pages:[
-    {key:'outbound', label:'كل الصادر'},
-    {key:'outbound_add', label:'تسجيل صادر'},
-    {key:'outbound_drafts', label:'مسودات الصادر'},
-    {key:'outbound_posted', label:'الصادر المرحل'}
-  ]},
-  {key:'transfers', label:'التحويل بين المخازن والفروع', icon:'transfers', pages:[
-    {key:'transfers', label:'كل التحويلات'},
-    {key:'transfers_send', label:'إرسال تحويل'},
-    {key:'transfers_receive', label:'استلام تحويل'},
-    {key:'transfers_pending', label:'التحويلات المعلقة'}
-  ]},
-  {key:'inventory', label:'الجرد', icon:'inventory', pages:[
-    {key:'inventory', label:'كل الجرد'},
-    {key:'inventory_full', label:'جرد كامل'},
-    {key:'inventory_partial', label:'جرد جزئي'},
-    {key:'inventory_differences', label:'فروقات الجرد'}
-  ]},
-  {key:'returns', label:'المرتجعات', icon:'returns', pages:[
-    {key:'returns', label:'كل المرتجعات'},
-    {key:'returns_add', label:'تسجيل مرتجع'},
-    {key:'returns_review', label:'قيد الفحص'}
-  ]},
-  {key:'damaged', label:'التالف والخسائر', icon:'damaged', pages:[
-    {key:'damaged', label:'كل التالف'},
-    {key:'damaged_add', label:'تسجيل تالف'},
-    {key:'damaged_losses', label:'تقرير الخسائر'}
-  ]},
-  {key:'suppliers', label:'الموردون', icon:'suppliers', pages:[
-    {key:'suppliers', label:'كل الموردين'},
-    {key:'suppliers_add', label:'إضافة مورد'},
-    {key:'suppliers_activity', label:'الوارد حسب المورد'}
-  ]},
-  {key:'reports', label:'التقارير', icon:'reports', pages:[
-    {key:'reports', label:'كل التقارير'},
-    {key:'reports_stock', label:'رصيد المخزون الحالي'},
-    {key:'reports_low_stock', label:'الأصناف الناقصة'},
-    {key:'reports_item_movement', label:'حركة صنف'},
-    {key:'reports_transfers', label:'التحويلات المعلقة'},
-    {key:'reports_inventory', label:'فروقات الجرد'}
-  ]},
-  {key:'users', label:'المستخدمون والصلاحيات', icon:'users', pages:[
-    {key:'users', label:'كل المستخدمين'},
-    {key:'users_add', label:'إضافة مستخدم'},
-    {key:'users_roles', label:'الأدوار والصلاحيات'}
-  ]},
-  {key:'ledger', label:'سجل الحركات', icon:'ledger', pages:[
-    {key:'ledger', label:'كل الحركات'},
-    {key:'ledger_filters', label:'بحث وتصفية'},
-    {key:'ledger_sensitive', label:'العمليات الحساسة'}
-  ]},
-  {key:'settings', label:'الإعدادات', icon:'settings', pages:[
-    {key:'settings', label:'إعدادات النشاط'},
-    {key:'settings_inventory', label:'إعدادات المخزون'},
-    {key:'settings_printing', label:'إعدادات الطباعة'},
-    {key:'settings_alerts', label:'إعدادات التنبيهات'}
-  ]},
-  {key:'backup', label:'النسخ الاحتياطي', icon:'backup', pages:[
-    {key:'backup', label:'النسخ الاحتياطي'},
-    {key:'backup_create', label:'أخذ نسخة'},
-    {key:'backup_restore', label:'استرجاع نسخة'}
-  ]}
+  {key:'dashboard', label:'لوحة التحكم', icon:'dashboard', pages:[{key:'dashboard', label:'لوحة التحكم'}]},
+  {key:'items', label:'الأصناف والتصنيفات', icon:'items', pages:[{key:'items', label:'كل الأصناف'},{key:'items_card', label:'بطاقة صنف'},{key:'items_categories', label:'التصنيفات'},{key:'items_low_stock', label:'الأصناف القريبة من النفاد'}]},
+  {key:'warehouses', label:'المخازن والفروع', icon:'warehouses', pages:[{key:'warehouses', label:'كل المخازن والفروع'},{key:'warehouses_add', label:'إضافة مخزن / فرع'},{key:'warehouses_balances', label:'أرصدة حسب المخزن'}]},
+  {key:'inbound', label:'الوارد', icon:'inbound', pages:[{key:'inbound', label:'كل الوارد'},{key:'inbound_add', label:'تسجيل وارد'},{key:'inbound_drafts', label:'مسودات الوارد'},{key:'inbound_posted', label:'الوارد المرحل'}]},
+  {key:'outbound', label:'الصادر', icon:'outbound', pages:[{key:'outbound', label:'كل الصادر'},{key:'outbound_add', label:'تسجيل صادر'},{key:'outbound_drafts', label:'مسودات الصادر'},{key:'outbound_posted', label:'الصادر المرحل'}]},
+  {key:'transfers', label:'التحويل بين المخازن والفروع', icon:'transfers', pages:[{key:'transfers', label:'كل التحويلات'},{key:'transfers_send', label:'إرسال تحويل'},{key:'transfers_receive', label:'استلام تحويل'},{key:'transfers_pending', label:'التحويلات المعلقة'}]},
+  {key:'inventory', label:'الجرد', icon:'inventory', pages:[{key:'inventory', label:'كل الجرد'},{key:'inventory_full', label:'جرد كامل'},{key:'inventory_partial', label:'جرد جزئي'},{key:'inventory_differences', label:'فروقات الجرد'}]},
+  {key:'returns', label:'المرتجعات', icon:'returns', pages:[{key:'returns', label:'كل المرتجعات'},{key:'returns_add', label:'تسجيل مرتجع'},{key:'returns_review', label:'قيد الفحص'}]},
+  {key:'damaged', label:'التالف والخسائر', icon:'damaged', pages:[{key:'damaged', label:'كل التالف'},{key:'damaged_add', label:'تسجيل تالف'},{key:'damaged_losses', label:'تقرير الخسائر'}]},
+  {key:'suppliers', label:'الموردون', icon:'suppliers', pages:[{key:'suppliers', label:'كل الموردين'},{key:'suppliers_add', label:'إضافة مورد'},{key:'suppliers_activity', label:'الوارد حسب المورد'}]},
+  {key:'reports', label:'التقارير', icon:'reports', pages:[{key:'reports', label:'كل التقارير'},{key:'reports_stock', label:'رصيد المخزون الحالي'},{key:'reports_low_stock', label:'الأصناف الناقصة'},{key:'reports_item_movement', label:'حركة صنف'},{key:'reports_transfers', label:'التحويلات المعلقة'},{key:'reports_inventory', label:'فروقات الجرد'}]},
+  {key:'users', label:'المستخدمون والصلاحيات', icon:'users', pages:[{key:'users', label:'كل المستخدمين'},{key:'users_add', label:'إضافة مستخدم'},{key:'users_roles', label:'الأدوار والصلاحيات'}]},
+  {key:'ledger', label:'سجل الحركات', icon:'ledger', pages:[{key:'ledger', label:'كل الحركات'},{key:'ledger_filters', label:'بحث وتصفية'},{key:'ledger_sensitive', label:'العمليات الحساسة'}]},
+  {key:'settings', label:'الإعدادات', icon:'settings', pages:[{key:'settings', label:'إعدادات النشاط'},{key:'settings_inventory', label:'إعدادات المخزون'},{key:'settings_printing', label:'إعدادات الطباعة'},{key:'settings_alerts', label:'إعدادات التنبيهات'}]},
+  {key:'backup', label:'النسخ الاحتياطي', icon:'backup', pages:[{key:'backup', label:'النسخ الاحتياطي'},{key:'backup_create', label:'أخذ نسخة'},{key:'backup_restore', label:'استرجاع نسخة'}]}
 ];
 
 const pageConfigs = {
@@ -524,255 +457,179 @@ const pageConfigs = {
   backup:{title:'النسخ الاحتياطي', desc:'أخذ نسخة، استرجاع نسخة، ومتابعة تاريخ آخر نسخة.'}
 };
 
-const tableColumns = {
-  items:['كود الصنف','اسم الصنف','التصنيف','الوحدة','الرصيد الصافي','الحد الأدنى','آخر شراء','الحالة','إجراءات'],
-  warehouses:['الكود','المخزن / الفرع','النوع','المسؤول','عدد الأصناف','آخر حركة','الحالة','إجراءات'],
-  inbound:['رقم الوارد','التاريخ','المورد','المخزن','عدد الأصناف','الإجمالي','الحالة','المستخدم','إجراءات'],
-  outbound:['رقم الصادر','التاريخ','الجهة المستلمة','المخزن','نوع الصادر','عدد الأصناف','الحالة','إجراءات'],
-  transfers:['رقم التحويل','من','إلى','التاريخ','عدد الأصناف','الحالة','المستلم','إجراءات'],
-  inventory:['رقم الجرد','المخزن','نوع الجرد','التاريخ','الفروقات','الحالة','المستخدم','إجراءات'],
-  returns:['رقم المرتجع','الحركة الأصلية','الصنف','الكمية','الحالة','التأثير','إجراءات'],
-  damaged:['رقم التلف','الصنف','الكمية','السبب','المخزن','التاريخ','القيمة','إجراءات'],
-  suppliers:['كود المورد','اسم المورد','الهاتف','المسؤول','آخر تعامل','الحالة','إجراءات'],
-  reports:['اسم التقرير','المجموعة','الفترة','آخر تشغيل','حالة التقرير','إجراءات'],
-  users:['اسم المستخدم','الدور','المخزن/الفرع','الحالة','آخر دخول','الصلاحيات','إجراءات'],
-  ledger:['الوقت','المستخدم','القسم','نوع العملية','المرجع','المخزن/الفرع','الحالة','إجراءات'],
-  settings:['الإعداد','المجموعة','القيمة الحالية','الحالة','إجراءات'],
-  backup:['رقم النسخة','التاريخ','الحجم','النوع','المستخدم','الحالة','إجراءات']
+const addPageForRoot = {items:'items_card',warehouses:'warehouses_add',inbound:'inbound_add',outbound:'outbound_add',transfers:'transfers_send',inventory:'inventory_full',returns:'returns_add',damaged:'damaged_add',suppliers:'suppliers_add',users:'users_add',backup:'backup_create'};
+const quickTarget = {inbound:'inbound_add',outbound:'outbound_add',transfers:'transfers_send',inventory:'inventory_full',reports:'reports_stock'};
+
+const appState = {
+  active: localStorage.getItem('makhzan.active') || 'dashboard',
+  navHistory: [],
+  viewDoc: null,
+  items: [
+    {code:'IT-001',name:'مادة عرض تجريبية',category:'تصنيف عام',unit:'قطعة',min:5,stock:14},
+    {code:'IT-002',name:'صنف بدون حركة',category:'تصنيف عام',unit:'كارتون',min:10,stock:8}
+  ],
+  warehouses:[{code:'WH-01',name:'المخزن الرئيسي',type:'مخزن',manager:'مدير النظام'},{code:'BR-01',name:'فرع الكرادة',type:'فرع',manager:'مسؤول فرع'}],
+  docs:{
+    inbound:[{no:'IN-0001',date:'اليوم',item:'IT-001',qty:4,warehouse:'WH-01',status:'posted',user:'مدير النظام'}],
+    outbound:[{no:'OUT-0001',date:'اليوم',item:'IT-001',qty:2,warehouse:'WH-01',status:'draft',user:'مدير النظام'}],
+    transfers:[{no:'TR-0001',from:'WH-01',to:'BR-01',item:'IT-001',qty:1,status:'pending',received:false,user:'مدير النظام'}],
+    inventory:[{no:'INV-0001',warehouse:'WH-01',type:'جزئي',item:'IT-002',counted:8,status:'draft',user:'مدير النظام'}],
+    returns:[{no:'RET-0001',ref:'OUT-0001',item:'IT-001',qty:0,mode:'صالح',status:'review'}],
+    damaged:[{no:'DMG-0001',item:'IT-002',qty:0,reason:'غير محدد',warehouse:'WH-01',status:'draft'}]
+  },
+  locked: new Set()
 };
 
-const tableRows = {
-  items:[['IT-001','مادة عرض تجريبية','تصنيف عام','قطعة','0','5','—','<span class="status warn">قريب من النفاد</span>'],['IT-002','صنف بدون حركة','تصنيف عام','كارتون','0','10','—','<span class="status muted">لا توجد حركة</span>']],
-  warehouses:[['WH-01','المخزن الرئيسي','مخزن','مدير النظام','0','—','<span class="status ok">نشط</span>'],['BR-01','فرع الكرادة','فرع','مسؤول فرع','0','—','<span class="status ok">نشط</span>']],
-  inbound:[['IN-0001','اليوم','مورد تجريبي','المخزن الرئيسي','0','0 د.ع','<span class="status muted">مسودة</span>','مدير النظام']],
-  outbound:[['OUT-0001','اليوم','جهة داخلية','المخزن الرئيسي','صرف تشغيلي','0','<span class="status muted">مسودة</span>']],
-  transfers:[['TR-0001','المخزن الرئيسي','فرع الكرادة','اليوم','0','<span class="status warn">بانتظار الاستلام</span>','—']],
-  inventory:[['INV-0001','المخزن الرئيسي','جزئي','اليوم','0','<span class="status muted">قيد التنفيذ</span>','مدير النظام']],
-  returns:[['RET-0001','OUT-0001','صنف تجريبي','0','<span class="status blue">قيد الفحص</span>','لم يرحل']],
-  damaged:[['DMG-0001','صنف تجريبي','0','غير محدد','المخزن الرئيسي','اليوم','0 د.ع']],
-  suppliers:[['SUP-001','مورد تجريبي','—','—','—','<span class="status ok">نشط</span>']],
-  reports:[['رصيد المخزون الحالي','أرصدة ومخزون','اليوم','—','<span class="status ok">جاهز</span>'],['الأصناف الناقصة','أرصدة ومخزون','اليوم','—','<span class="status warn">يحتاج مراجعة</span>']],
-  users:[['مدير النظام','مدير النظام','كل المخازن','<span class="status ok">نشط</span>','اليوم','كاملة']],
-  ledger:[['اليوم 10:30','مدير النظام','النظام','تهيئة واجهة','SYS','عام','<span class="status ok">مسجل</span>']],
-  settings:[['منع السالب','إعدادات المخزون','مفعل','<span class="status ok">معتمد</span>'],['تنبيه النقص','التنبيهات','مفعل','<span class="status ok">معتمد</span>']],
-  backup:[['BK-0001','—','—','يدوي','مدير النظام','<span class="status muted">لا توجد نسخة بعد</span>']]
-};
-
-
-let active = 'dashboard';
-
-function sectionForPage(key){
-  return sections.find(s => s.key === key || (s.pages || []).some(p => p.key === key)) || sections[0];
-}
-function pageLabelForKey(key){
-  const sec = sectionForPage(key);
-  const pg = (sec.pages || []).find(p => p.key === key);
-  return pg ? pg.label : sec.label;
-}
-function rootKeyForPage(key){
-  return sectionForPage(key).key;
-}
-function pageDescriptionForKey(key){
-  const root = rootKeyForPage(key);
-  return (pageConfigs[root] || pageConfigs.dashboard).desc;
-}
-
-
+function sectionForPage(key){ return sections.find(s => s.key===key || s.pages.some(p=>p.key===key)) || sections[0]; }
+function rootKeyForPage(key){ return sectionForPage(key).key; }
+function pageLabelForKey(key){ const sec=sectionForPage(key); const pg=sec.pages.find(p=>p.key===key); return pg?pg.label:sec.label; }
+function isAddPage(key){ return Object.values(addPageForRoot).includes(key) || ['transfers_receive','inventory_partial','backup_restore'].includes(key); }
 
 function navIcon(name){
-  const common = 'class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"';
-  const icons = {
-    dashboard:`<svg ${common}><rect x="4" y="4" width="6" height="6" rx="1.4"/><rect x="14" y="4" width="6" height="6" rx="1.4"/><rect x="4" y="14" width="6" height="6" rx="1.4"/><rect x="14" y="14" width="6" height="6" rx="1.4"/></svg>`,
-    items:`<svg ${common}><path d="M20 12l-8 8-8-8V4h8z"/><path d="M8.5 8.5h.01"/><path d="M12 4l8 8"/></svg>`,
-    warehouses:`<svg ${common}><path d="M4 10l8-5 8 5"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/><path d="M8 12h8"/></svg>`,
-    inbound:`<svg ${common}><path d="M12 4v10"/><path d="M8 10l4 4 4-4"/><path d="M5 18h14"/><path d="M6 14v4"/><path d="M18 14v4"/></svg>`,
-    outbound:`<svg ${common}><path d="M12 14V4"/><path d="M8 8l4-4 4 4"/><path d="M5 18h14"/><path d="M6 14v4"/><path d="M18 14v4"/></svg>`,
-    transfers:`<svg ${common}><path d="M7 7h11"/><path d="M15 4l3 3-3 3"/><path d="M17 17H6"/><path d="M9 14l-3 3 3 3"/></svg>`,
-    inventory:`<svg ${common}><path d="M8 4h8l1 2h3v15H4V6h3z"/><path d="M9 11h6"/><path d="M9 15h6"/><path d="M9 19h4"/></svg>`,
-    returns:`<svg ${common}><path d="M9 7l-5 5 5 5"/><path d="M5 12h11a4 4 0 0 1 0 8h-2"/><path d="M14 4h5v5"/></svg>`,
-    damaged:`<svg ${common}><path d="M12 3l9 16H3z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`,
-    suppliers:`<svg ${common}><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/><path d="M5 11h5"/></svg>`,
-    reports:`<svg ${common}><path d="M4 19h16"/><path d="M7 16v-5"/><path d="M12 16V7"/><path d="M17 16v-8"/></svg>`,
-    users:`<svg ${common}><path d="M12 3l7 3v5c0 4.5-2.8 7.2-7 9-4.2-1.8-7-4.5-7-9V6z"/><path d="M12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M8.8 15c.7-1.6 1.8-2.4 3.2-2.4s2.5.8 3.2 2.4"/></svg>`,
-    ledger:`<svg ${common}><path d="M6 4h12v16H6z"/><path d="M9 8h6"/><path d="M9 12h6"/><path d="M9 16h4"/><path d="M4 7h2"/><path d="M4 12h2"/><path d="M4 17h2"/></svg>`,
-    settings:`<svg ${common}><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2.1-.5a7 7 0 0 0-.7-1.7l1.1-1.8-2.1-2.1-1.8 1.1a7 7 0 0 0-1.7-.7L11.2 2h-3l-.5 2.1a7 7 0 0 0-1.7.7L4.2 3.7 2.1 5.8l1.1 1.8a7 7 0 0 0-.7 1.7L.4 9.8v3l2.1.5a7 7 0 0 0 .7 1.7l-1.1 1.8 2.1 2.1 1.8-1.1a7 7 0 0 0 1.7.7l.5 2.1h3l.5-2.1a7 7 0 0 0 1.7-.7l1.8 1.1 2.1-2.1-1.1-1.8a7 7 0 0 0 .7-1.7z" transform="translate(2 1) scale(.86)"/></svg>`,
-    backup:`<svg ${common}><ellipse cx="12" cy="5" rx="7" ry="3"/><path d="M5 5v10c0 1.7 3.1 3 7 3s7-1.3 7-3V5"/><path d="M5 10c0 1.7 3.1 3 7 3s7-1.3 7-3"/><path d="M15 17l2 2 3-4"/></svg>`
-  };
-  return icons[name] || icons.dashboard;
+  const c='class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"';
+  const i={dashboard:`<svg ${c}><rect x="4" y="4" width="6" height="6" rx="1.4"/><rect x="14" y="4" width="6" height="6" rx="1.4"/><rect x="4" y="14" width="6" height="6" rx="1.4"/><rect x="14" y="14" width="6" height="6" rx="1.4"/></svg>`,items:`<svg ${c}><path d="M20 12l-8 8-8-8V4h8z"/><path d="M8.5 8.5h.01"/><path d="M12 4l8 8"/></svg>`,warehouses:`<svg ${c}><path d="M4 10l8-5 8 5"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/><path d="M8 12h8"/></svg>`,inbound:`<svg ${c}><path d="M12 4v10"/><path d="M8 10l4 4 4-4"/><path d="M5 18h14"/></svg>`,outbound:`<svg ${c}><path d="M12 14V4"/><path d="M8 8l4-4 4 4"/><path d="M5 18h14"/></svg>`,transfers:`<svg ${c}><path d="M7 7h11"/><path d="M15 4l3 3-3 3"/><path d="M17 17H6"/><path d="M9 14l-3 3 3 3"/></svg>`,inventory:`<svg ${c}><path d="M8 4h8l1 2h3v15H4V6h3z"/><path d="M9 11h6"/><path d="M9 15h6"/></svg>`,returns:`<svg ${c}><path d="M9 7l-5 5 5 5"/><path d="M5 12h11a4 4 0 0 1 0 8h-2"/></svg>`,damaged:`<svg ${c}><path d="M12 3l9 16H3z"/><path d="M12 9v4"/></svg>`,suppliers:`<svg ${c}><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/></svg>`,reports:`<svg ${c}><path d="M4 19h16"/><path d="M7 16v-5"/><path d="M12 16V7"/><path d="M17 16v-8"/></svg>`,users:`<svg ${c}><path d="M12 3l7 3v5c0 4.5-2.8 7.2-7 9-4.2-1.8-7-4.5-7-9V6z"/></svg>`,ledger:`<svg ${c}><path d="M6 4h12v16H6z"/><path d="M9 8h6"/><path d="M9 12h6"/></svg>`,settings:`<svg ${c}><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2.1-.5a7 7 0 0 0-.7-1.7l1.1-1.8-2.1-2.1"/></svg>`,backup:`<svg ${c}><ellipse cx="12" cy="5" rx="7" ry="3"/><path d="M5 5v10c0 1.7 3.1 3 7 3s7-1.3 7-3V5"/></svg>`};
+  return i[name] || i.dashboard;
 }
 
+function safeNavigate(next){ if(!next || next===appState.active) return; appState.navHistory.push(appState.active); appState.active=next; localStorage.setItem('makhzan.active',next); render(); }
+function goBack(){ const prev=appState.navHistory.pop(); safeNavigate(prev || rootKeyForPage(appState.active)); }
+
+function recalcStock(){
+  const base = Object.fromEntries(appState.items.map(i=>[i.code,0]));
+  appState.docs.inbound.filter(d=>d.status==='posted').forEach(d=>base[d.item]=(base[d.item]||0)+d.qty);
+  appState.docs.outbound.filter(d=>d.status==='posted').forEach(d=>base[d.item]=(base[d.item]||0)-d.qty);
+  appState.docs.damaged.filter(d=>d.status==='posted').forEach(d=>base[d.item]=(base[d.item]||0)-d.qty);
+  appState.docs.returns.filter(d=>d.status==='posted').forEach(d=>base[d.item]=(base[d.item]||0)+(d.mode==='صالح'?d.qty:0));
+  appState.docs.inventory.filter(d=>d.status==='posted').forEach(d=>{ base[d.item]=d.counted; });
+  appState.items.forEach(item=>{ item.stock = Math.max(0, base[item.code] ?? item.stock); });
+}
+
+function canPost(docType, doc){
+  if(doc.status==='posted' || appState.locked.has(doc.no)) return {ok:false,msg:'تم ترحيل العملية مسبقاً.'};
+  const stock = (appState.items.find(i=>i.code===doc.item)?.stock) ?? 0;
+  if(['outbound','damaged'].includes(docType) && doc.qty>stock) return {ok:false,msg:'لا يمكن الصرف أو الإتلاف مع رصيد سالب.'};
+  if(docType==='returns' && doc.qty<0) return {ok:false,msg:'كمية المرتجع غير صالحة.'};
+  return {ok:true};
+}
+
+function postDocument(docType, no){
+  const doc = appState.docs[docType].find(d=>d.no===no);
+  if(!doc) return;
+  const v = canPost(docType, doc);
+  if(!v.ok){ alert(v.msg); return; }
+  appState.locked.add(no); doc.status='posted'; recalcStock(); render();
+}
+
+function addDocument(type, payload){
+  if(appState.docs[type].some(d=>d.no===payload.no)){ alert('رقم المرجع مكرر.'); return; }
+  appState.docs[type].push({...payload,status:'draft',user:'مدير النظام'});
+  safeNavigate(rootKeyForPage(type));
+}
+
+function pageHead(cfg){ return `<div class="page-head"><div class="page-title"><span class="eyebrow">نظام إدارة المخازن والفروع</span><h1>${cfg.title}</h1><p>${cfg.desc}</p></div><div class="head-badges"><span class="top-pill">النخبة للحلول الإدارية – نظام إدارة المخازن والفروع</span></div></div>`; }
+
 function renderNav(){
-  const nav = document.getElementById('navScroll');
-  const activeSection = rootKeyForPage(active);
-  nav.innerHTML = sections.map(s=>`
-    <div class="side-item ${s.key===activeSection?'active':''}" data-section="${s.key}" title="${s.label}">
-      <div class="side-meta"><span class="ico">${navIcon(s.icon)}</span><span class="label">${s.label}</span></div>
-      <span class="chev">›</span>
-    </div>`).join('');
+  const nav=document.getElementById('navScroll');
+  const activeSection=rootKeyForPage(appState.active);
+  nav.innerHTML=sections.map(s=>`<div class="side-item ${s.key===activeSection?'active':''}" data-section="${s.key}" title="${s.label}"><div class="side-meta"><span class="ico">${navIcon(s.icon)}</span><span class="label">${s.label}</span></div><span class="chev">›</span></div>`).join('');
 }
 
 function openFlyout(sec, anchor){
-  const flyout = document.getElementById('flyout');
-  if(!sec || !flyout) return;
-  const pages = sec.pages || [{key:sec.key,label:sec.label}];
-  flyout.innerHTML = `
-    <div class="flyout-title"><strong><span class="flyout-title-icon">${navIcon(sec.icon)}</span>${sec.label}</strong><small>${pages.length}</small></div>
-    ${pages.map(p=>`<div class="flyout-opt ${p.key===active?'active':''}" data-page="${p.key}"><span>${p.label}</span><span class="option-ico">↵</span></div>`).join('')}
-  `;
-  const r = anchor.getBoundingClientRect();
-  flyout.style.top = Math.min(r.top, window.innerHeight - 120) + 'px';
-  flyout.classList.add('open');
+  const flyout=document.getElementById('flyout'); if(!sec) return;
+  flyout.innerHTML=`<div class="flyout-title"><strong><span class="flyout-title-icon">${navIcon(sec.icon)}</span>${sec.label}</strong><small>${sec.pages.length}</small></div>${sec.pages.map(p=>`<div class="flyout-opt ${p.key===appState.active?'active':''}" data-page="${p.key}"><span>${p.label}</span><span class="option-ico">↵</span></div>`).join('')}`;
+  const r=anchor.getBoundingClientRect(); flyout.style.top=Math.min(r.top,window.innerHeight-120)+'px'; flyout.classList.add('open');
 }
 
+function buildRows(root){
+  if(root==='items') return appState.items.map(i=>[i.code,i.name,i.category,i.unit,String(i.stock),String(i.min),'—', i.stock<=i.min?'<span class="status warn">قريب من النفاد</span>':'<span class="status ok">جيد</span>']);
+  if(root==='inbound') return appState.docs.inbound.map(d=>[d.no,d.date,'مورد',d.warehouse,'1','0 د.ع',d.status==='posted'?'<span class="status ok">مرحل</span>':'<span class="status muted">مسودة</span>',d.user]);
+  if(root==='outbound') return appState.docs.outbound.map(d=>[d.no,d.date,'جهة داخلية',d.warehouse,'صرف تشغيلي','1',d.status==='posted'?'<span class="status ok">مرحل</span>':'<span class="status muted">مسودة</span>']);
+  if(root==='transfers') return appState.docs.transfers.map(d=>[d.no,d.from,d.to,'اليوم','1',d.received?'<span class="status ok">مستلم</span>':'<span class="status warn">بانتظار الاستلام</span>',d.received?'مستلم':'—']);
+  if(root==='inventory') return appState.docs.inventory.map(d=>[d.no,d.warehouse,d.type,'اليوم','0',d.status==='posted'?'<span class="status ok">مرحل</span>':'<span class="status muted">قيد التنفيذ</span>',d.user]);
+  if(root==='returns') return appState.docs.returns.map(d=>[d.no,d.ref,d.item,String(d.qty),d.status==='posted'?'<span class="status ok">مرحل</span>':'<span class="status blue">قيد الفحص</span>',d.mode]);
+  if(root==='damaged') return appState.docs.damaged.map(d=>[d.no,d.item,String(d.qty),d.reason,d.warehouse,'اليوم','0 د.ع']);
+  return [];
+}
 
-function pageHead(cfg){
-  return `<div class="page-head">
-    <div class="page-title"><span class="eyebrow">نظام إدارة المخازن والفروع</span><h1>${cfg.title}</h1><p>${cfg.desc}</p></div>
-    <div class="head-badges"><span class="top-pill">النخبة للحلول الإدارية – نظام إدارة المخازن والفروع</span></div>
-  </div>`;
+const tableColumns={items:['كود الصنف','اسم الصنف','التصنيف','الوحدة','الرصيد الصافي','الحد الأدنى','آخر شراء','الحالة','إجراءات'],warehouses:['الكود','المخزن / الفرع','النوع','المسؤول','عدد الأصناف','آخر حركة','الحالة','إجراءات'],inbound:['رقم الوارد','التاريخ','المورد','المخزن','عدد الأصناف','الإجمالي','الحالة','المستخدم','إجراءات'],outbound:['رقم الصادر','التاريخ','الجهة المستلمة','المخزن','نوع الصادر','عدد الأصناف','الحالة','إجراءات'],transfers:['رقم التحويل','من','إلى','التاريخ','عدد الأصناف','الحالة','المستلم','إجراءات'],inventory:['رقم الجرد','المخزن','نوع الجرد','التاريخ','الفروقات','الحالة','المستخدم','إجراءات'],returns:['رقم المرتجع','الحركة الأصلية','الصنف','الكمية','الحالة','التأثير','إجراءات'],damaged:['رقم التلف','الصنف','الكمية','السبب','المخزن','التاريخ','القيمة','إجراءات']};
+
+function buildTable(root, rows){
+  const cols = tableColumns[root] || ['البيان','القيمة','الحالة','إجراءات'];
+  return `<div class="table-card"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map((r,idx)=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><div class="row-actions"><button class="btn small secondary" data-action="view" data-root="${root}" data-index="${idx}">عرض</button><button class="btn small success" data-action="post" data-root="${root}" data-index="${idx}">ترحيل</button></div></td></tr>`).join('')}</tbody></table></div><div class="pager"><span>عدد السجلات: ${rows.length}</span><span>صفحة 1</span></div></div>`;
+}
+
+function docDetails(root, idx){
+  const d = (appState.docs[root]||[])[idx]; if(!d) return '<div class="empty"><b>لا توجد تفاصيل</b></div>';
+  const entries = Object.entries(d).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  return `<div class="section-card"><div class="section-head"><h2>تفاصيل الحركة</h2><small>${d.no || ''}</small></div><div class="section-body"><table style="min-width:100%"><tbody>${entries}</tbody></table><div class="form-actions"><button class="btn back" data-action="back">رجوع</button></div></div></div>`;
 }
 
 function dashboard(){
-  return `${pageHead(pageConfigs.dashboard)}
-  <div class="summary-row dashboard-summary">
-    <div class="sum-card"><span>إجمالي الأصناف</span><strong>128</strong><small>مرتبط بالتصنيفات والباركود</small></div>
-    <div class="sum-card"><span>إجمالي الوارد</span><strong>0</strong><small>خلال اليوم</small></div>
-    <div class="sum-card"><span>إجمالي الصادر</span><strong>0</strong><small>خلال اليوم</small></div>
-    <div class="sum-card warn"><span>تحويلات معلقة</span><strong>3</strong><small>بانتظار الاستلام</small></div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-head"><h2>التنبيهات</h2><small>نقاط خطر</small></div>
-    <div class="section-body alerts-list">
-      <div class="alert-item danger"><div class="alert-ico">!</div><div><b>نقص مخزون</b><span>6 أصناف وصلت أو اقتربت من الحد الأدنى.</span></div></div>
-      <div class="alert-item warning"><div class="alert-ico">↔</div><div><b>تحويلات معلقة</b><span>3 تحويلات مرسلة ولم يتم تأكيد استلامها بعد.</span></div></div>
-      <div class="alert-item"><div class="alert-ico">⌁</div><div><b>جرد متأخر</b><span>فرع واحد يحتاج مراجعة جرد خلال الفترة الحالية.</span></div></div>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-head"><h2>آخر الحركات</h2><small>عرض رقابي سريع</small></div>
-    <div class="section-body" style="padding:0">${buildTable(['الوقت','القسم','العملية','المخزن/الفرع','الحالة','إجراءات'], [
-      ['10:30','النظام','تهيئة واجهة المخزن','عام','<span class="status ok">مسجل</span>'],
-      ['09:50','التحويل','تحويل بانتظار الاستلام','فرع الكرادة','<span class="status warn">معلق</span>'],
-      ['09:10','الأصناف','تنبيه حد أدنى','المخزن الرئيسي','<span class="status danger">نقص</span>']
-    ], false)}</div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-head"><h2>وصول سريع</h2><small>عمليات يومية</small></div>
-    <div class="section-body quick-grid">
-      <button class="quick-card" data-jump="inbound"><i>📥</i><span><b>تسجيل وارد</b><span>استلام بضاعة وترحيل</span></span></button>
-      <button class="quick-card" data-jump="outbound"><i>📤</i><span><b>تسجيل صادر</b><span>صرف مع منع السالب</span></span></button>
-      <button class="quick-card" data-jump="transfers"><i>🔁</i><span><b>تحويل مخزني</b><span>إرسال واستلام</span></span></button>
-      <button class="quick-card" data-jump="inventory"><i>🧮</i><span><b>بدء جرد</b><span>كامل أو جزئي</span></span></button>
-      <button class="quick-card" data-jump="reports"><i>📈</i><span><b>التقارير</b><span>رصيد وحركة وفروقات</span></span></button>
-    </div>
-  </div>`;
+  const inPosted=appState.docs.inbound.filter(d=>d.status==='posted').length;
+  const outPosted=appState.docs.outbound.filter(d=>d.status==='posted').length;
+  const pendingTransfers=appState.docs.transfers.filter(d=>!d.received).length;
+  const low=appState.items.filter(i=>i.stock<=i.min).length;
+  return `${pageHead(pageConfigs.dashboard)}<div class="summary-row dashboard-summary"><div class="sum-card"><span>إجمالي الأصناف</span><strong>${appState.items.length}</strong><small>مرتبط بالتصنيفات والباركود</small></div><div class="sum-card"><span>إجمالي الوارد المرحل</span><strong>${inPosted}</strong><small>تحديث مباشر</small></div><div class="sum-card"><span>إجمالي الصادر المرحل</span><strong>${outPosted}</strong><small>تحديث مباشر</small></div><div class="sum-card warn"><span>تحويلات معلقة</span><strong>${pendingTransfers}</strong><small>بانتظار الاستلام</small></div></div><div class="section-card"><div class="section-head"><h2>التنبيهات</h2><small>نقاط خطر</small></div><div class="section-body alerts-list"><div class="alert-item ${low?'danger':''}"><div class="alert-ico">!</div><div><b>نقص مخزون</b><span>${low} أصناف وصلت أو اقتربت من الحد الأدنى.</span></div></div></div></div><div class="section-card"><div class="section-head"><h2>وصول سريع</h2><small>عمليات يومية</small></div><div class="section-body quick-grid"><button class="quick-card" data-jump="inbound_add"><i>📥</i><span><b>تسجيل وارد</b><span>استلام بضاعة وترحيل</span></span></button><button class="quick-card" data-jump="outbound_add"><i>📤</i><span><b>تسجيل صادر</b><span>صرف مع منع السالب</span></span></button><button class="quick-card" data-jump="transfers_send"><i>🔁</i><span><b>تحويل مخزني</b><span>إرسال واستلام</span></span></button><button class="quick-card" data-jump="inventory_full"><i>🧮</i><span><b>بدء جرد</b><span>كامل أو جزئي</span></span></button><button class="quick-card" data-jump="reports_stock"><i>📈</i><span><b>التقارير</b><span>رصيد وحركة وفروقات</span></span></button></div></div>`;
 }
-function buildTable(cols, rows, withPager=true){
-  return `<div class="table-card"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><div class="row-actions"><button class="btn small secondary">عرض</button><button class="btn small primary">تعديل</button></div></td></tr>`).join('')}</tbody></table></div>${withPager?`<div class="pager"><span>عدد السجلات: ${rows.length}</span><span>صفحة 1</span></div>`:''}</div>`;
+
+function addForm(pageKey){
+  const root = rootKeyForPage(pageKey);
+  return `${pageHead(pageConfigs[root])}<div class="section-card"><div class="section-head"><h2>${pageLabelForKey(pageKey)}</h2><small>نموذج فعلي</small></div><div class="section-body"><form id="entityForm" data-root="${root}" class="form-grid"><div class="field"><label>المرجع</label><input class="form-control" name="no" required placeholder="رقم الحركة"></div><div class="field"><label>الصنف</label><select class="form-control" name="item">${appState.items.map(i=>`<option value="${i.code}">${i.code} - ${i.name}</option>`).join('')}</select></div><div class="field"><label>الكمية</label><input class="form-control" type="number" min="0" name="qty" required></div><div class="field"><label>المخزن</label><select class="form-control" name="warehouse">${appState.warehouses.map(w=>`<option value="${w.code}">${w.name}</option>`).join('')}</select></div><div class="field full"><label>ملاحظات</label><textarea class="form-control" name="notes"></textarea></div><div class="field full"><div class="form-actions"><button class="btn primary" type="submit">حفظ كمسودة</button><button class="btn back" type="button" data-action="back">رجوع</button></div></div></form></div></div>`;
 }
 
 function genericPage(key){
-  const cfg = pageConfigs[key];
-  const cols = tableColumns[key] || ['البيان','القيمة','الحالة','إجراءات'];
-  const rows = tableRows[key] || [];
-  return `${pageHead(cfg)}
-    <div class="summary-row">
-      <div class="sum-card"><span>إجمالي السجلات</span><strong>${rows.length}</strong><small>حسب الفلتر الحالي</small></div>
-      <div class="sum-card blue"><span>نشط</span><strong>${Math.max(0, rows.length-1)}</strong><small>جاهز للعمل</small></div>
-      <div class="sum-card warn"><span>بانتظار مراجعة</span><strong>1</strong><small>يتطلب انتباه</small></div>
-      <div class="sum-card danger"><span>تنبيهات</span><strong>${key==='items'?6:0}</strong><small>ضمن هذا القسم</small></div>
-    </div>
-    <div class="toolbar">
-      <div class="tool-right"><input class="control search" placeholder="بحث..."><select class="control"><option>كل الحالات</option><option>نشط</option><option>مسودة</option><option>معلق</option></select><input class="control" type="date"></div>
-      <div class="tool-left"><button class="btn primary">＋ إضافة</button><button class="btn success">اعتماد / ترحيل</button><button class="btn print">طباعة / PDF</button><button class="btn secondary">تصدير</button><button class="btn back">رجوع</button></div>
-    </div>
-    ${buildTable(cols, rows)}`;
+  const root=rootKeyForPage(key);
+  if(isAddPage(key)) return addForm(key);
+  if(key.endsWith('_view') && appState.viewDoc) return docDetails(appState.viewDoc.root, appState.viewDoc.idx);
+  if(root==='settings') return settingsPage();
+  if(root==='dashboard') return dashboard();
+  const rows=buildRows(root);
+  const addTarget=addPageForRoot[root];
+  return `${pageHead(pageConfigs[root] || pageConfigs.dashboard)}<div class="summary-row"><div class="sum-card"><span>إجمالي السجلات</span><strong>${rows.length}</strong><small>حسب الفلتر الحالي</small></div><div class="sum-card blue"><span>نشط</span><strong>${rows.length}</strong><small>جاهز للعمل</small></div><div class="sum-card warn"><span>بانتظار مراجعة</span><strong>${rows.filter(r=>String(r).includes('مسودة')).length}</strong><small>يتطلب انتباه</small></div><div class="sum-card danger"><span>تنبيهات</span><strong>${appState.items.filter(i=>i.stock<=i.min).length}</strong><small>ضمن هذا القسم</small></div></div><div class="toolbar"><div class="tool-right"><input class="control search" placeholder="بحث..."><select class="control"><option>كل الحالات</option><option>نشط</option><option>مسودة</option><option>معلق</option></select><input class="control" type="date"></div><div class="tool-left">${addTarget?`<button class="btn primary" data-jump="${addTarget}">＋ إضافة</button>`:''}<button class="btn secondary" data-action="back">رجوع</button></div></div>${buildTable(root, rows)}`;
 }
 
-function settingsPage(){
-  return `${pageHead(pageConfigs.settings)}
-    <div class="settings-grid">
-      <div class="section-card identity-card">
-        <div><span class="eyebrow">هوية النظام</span><h3 style="margin:0;color:#fff">الهوية البصرية المعتمدة</h3></div>
-        <p style="margin:0;color:var(--muted);font-size:12px;line-height:1.8">تم تثبيت الهوية الداكنة المعتمدة للنظام: قوية، عملية، واضحة، وبدون إدخال طابع بوتيك أو فخامة ناعمة.</p>
-        <div class="palette-row">
-          <div class="palette-chip" style="background:#20221e">الخلفية</div>
-          <div class="palette-chip" style="background:#242621">السايدبار</div>
-          <div class="palette-chip" style="background:#2a2d28">اللوحات</div>
-          <div class="palette-chip" style="background:#81b64c;color:#f8fff1;text-shadow:0 1px 2px rgba(0,0,0,.35)">اللون الأساسي</div>
-        </div>
-      </div>
-      <div class="section-card identity-card">
-        <div><span class="eyebrow">قواعد الواجهة</span><h3 style="margin:0;color:#fff">قواعد الواجهة</h3></div>
-        <div class="alerts-list">
-          <div class="alert-item"><div class="alert-ico">✓</div><div><b>لا Hero ولا Top Navigation</b><span>السايدبار هو محور التنقل.</span></div></div>
-          <div class="alert-item"><div class="alert-ico">✓</div><div><b>كروت وجداول واضحة</b><span>أولوية للمعلومة قبل الزينة.</span></div></div>
-          <div class="alert-item warning"><div class="alert-ico">!</div><div><b>الثيم ليس مجرد Accent</b><span>تم تثبيت الثيم الأساسي بدل تبديل ألوان ضعيف.</span></div></div>
-        </div>
-      </div>
-    </div>
-    `;
-}
+function settingsPage(){ return `${pageHead(pageConfigs.settings)}<div class="section-card"><div class="section-head"><h2>قواعد الواجهة</h2><small>ثابتة</small></div><div class="section-body"><div class="alerts-list"><div class="alert-item"><div class="alert-ico">✓</div><div><b>لا تغيير تصميمي</b><span>النسخة مثبتة وظيفياً فقط.</span></div></div></div></div></div>`; }
 
 function render(){
-  renderNav();
-  const root = rootKeyForPage(active);
-  const cfg = pageConfigs[root] || pageConfigs.dashboard;
-  const title = pageLabelForKey(active);
-  document.getElementById('crumbText').textContent = title;
-  if(root === 'dashboard') document.getElementById('page').innerHTML = dashboard();
-  else if(root === 'settings') document.getElementById('page').innerHTML = settingsPage();
-  else document.getElementById('page').innerHTML = genericPage(root);
+  recalcStock(); renderNav();
+  document.getElementById('crumbText').textContent = pageLabelForKey(appState.active);
+  document.getElementById('page').innerHTML = genericPage(appState.active);
 }
 
-
-document.addEventListener('click', e=>{
-  const side = e.target.closest('[data-section]');
-  if(side){
-    const sec = sections.find(s=>s.key === side.dataset.section);
-    openFlyout(sec, side);
-    return;
-  }
-
-  const pageOpt = e.target.closest('[data-page]');
-  if(pageOpt){
-    active = pageOpt.dataset.page;
-    document.getElementById('flyout')?.classList.remove('open');
-    render();
-    return;
-  }
-
-  const jump = e.target.closest('[data-jump]');
-  if(jump){
-    active = jump.dataset.jump;
-    document.getElementById('flyout')?.classList.remove('open');
-    render();
-    return;
-  }
-
-  if(e.target.closest('#sideSearch')){
-    alert('البحث السريع جاهز للربط لاحقًا مع قاعدة البيانات.');
-    return;
-  }
-
-  if(e.target.closest('[data-save-now]')){
-    alert('تم الحفظ التجريبي.');
-    return;
-  }
-
-  if(e.target.closest('[data-logout]')){
-    alert('تسجيل الخروج جاهز للربط.');
-    return;
-  }
-
-  if(!e.target.closest('.rightbar') && !e.target.closest('.flyout')){
-    document.getElementById('flyout')?.classList.remove('open');
-  }
+document.addEventListener('submit', e=>{
+  const form=e.target.closest('#entityForm'); if(!form) return;
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(form).entries());
+  const root=form.dataset.root;
+  const payload={no:data.no,date:'اليوم',item:data.item,qty:Number(data.qty||0),warehouse:data.warehouse};
+  if(root==='inbound') return addDocument('inbound', payload);
+  if(root==='outbound') return addDocument('outbound', payload);
+  if(root==='damaged') return addDocument('damaged', {...payload,reason:'غير محدد'});
+  if(root==='returns') return addDocument('returns', {no:data.no,ref:'—',item:data.item,qty:Number(data.qty||0),mode:'صالح'});
+  if(root==='inventory') return addDocument('inventory', {no:data.no,warehouse:data.warehouse,type:'جزئي',item:data.item,counted:Number(data.qty||0)});
+  if(root==='transfers') return addDocument('transfers', {no:data.no,from:'WH-01',to:'BR-01',item:data.item,qty:Number(data.qty||0),received:false});
+  safeNavigate(root);
 });
 
+document.addEventListener('click', e=>{
+  const side=e.target.closest('[data-section]'); if(side){ openFlyout(sections.find(s=>s.key===side.dataset.section), side); return; }
+  const pageOpt=e.target.closest('[data-page]'); if(pageOpt){ safeNavigate(pageOpt.dataset.page); document.getElementById('flyout')?.classList.remove('open'); return; }
+  const jump=e.target.closest('[data-jump]'); if(jump){ safeNavigate(quickTarget[jump.dataset.jump] || jump.dataset.jump); document.getElementById('flyout')?.classList.remove('open'); return; }
+  const action=e.target.closest('[data-action]');
+  if(action){
+    const root=action.dataset.root; const idx=Number(action.dataset.index);
+    if(action.dataset.action==='back') return goBack();
+    if(action.dataset.action==='view'){ appState.viewDoc={root,idx}; return safeNavigate(`${root}_view`); }
+    if(action.dataset.action==='post'){
+      const doc=(appState.docs[root]||[])[idx]; if(!doc){ alert('لا توجد حركة.'); return; }
+      return postDocument(root, doc.no);
+    }
+  }
+  if(e.target.closest('#sideSearch')) return alert('البحث السريع جاهز للاستخدام المحلي.');
+  if(e.target.closest('[data-save-now]')){ localStorage.setItem('makhzan.snapshot', JSON.stringify(appState)); alert('تم حفظ نسخة محلية.'); return; }
+  if(e.target.closest('[data-logout]')) return alert('تسجيل الخروج جاهز للربط.');
+  if(!e.target.closest('.rightbar') && !e.target.closest('.flyout')) document.getElementById('flyout')?.classList.remove('open');
+});
 
 document.getElementById('dateText').textContent = new Date().toLocaleDateString('ar-IQ',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 render();
