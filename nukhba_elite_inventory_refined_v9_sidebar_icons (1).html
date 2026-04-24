@@ -560,6 +560,9 @@ const tableRows = {
 
 
 let active = 'dashboard';
+let previousPage = 'dashboard';
+const activityLog = [];
+const actionLocks = new Set();
 
 function sectionForPage(key){
   return sections.find(s => s.key === key || (s.pages || []).some(p => p.key === key)) || sections[0];
@@ -670,14 +673,136 @@ function dashboard(){
     </div>
   </div>`;
 }
+const actionLabels = {
+  add:'إضافة',
+  save:'حفظ',
+  edit:'تعديل',
+  cancel:'إلغاء',
+  clear:'تفريغ',
+  post:'اعتماد / ترحيل',
+  confirm:'تأكيد',
+  approve:'اعتماد',
+  sendTransfer:'إرسال التحويل',
+  receiveTransfer:'استلام التحويل',
+  cancelTransfer:'إلغاء التحويل',
+  applyInventory:'تطبيق الجرد',
+  applyReturn:'تطبيق المرتجع',
+  confirmDamaged:'تأكيد التالف',
+  view:'عرض',
+  delete:'حذف',
+  export:'تصدير',
+  print:'طباعة / PDF',
+  backup:'إنشاء نسخة احتياطية',
+  restoreBackup:'استرجاع نسخة',
+  switchUser:'تبديل المستخدم',
+  permission:'إدارة الصلاحيات',
+  notReady:'هذه الوظيفة غير مفعلة بعد'
+};
+const pageToolbars = {
+  items:['add','post','print','export','back'],
+  warehouses:['add','save','print','export','back'],
+  inbound:['add','save','post','export','back'],
+  outbound:['add','save','post','export','back'],
+  transfers:['sendTransfer','receiveTransfer','cancelTransfer','export','back'],
+  inventory:['save','applyInventory','print','export','back'],
+  returns:['save','applyReturn','print','export','back'],
+  damaged:['save','confirmDamaged','print','export','back'],
+  suppliers:['add','save','print','export','back'],
+  reports:['view','export','print','back'],
+  users:['add','edit','switchUser','permission','back'],
+  ledger:['view','export','print','back'],
+  settings:['save','clear','back'],
+  backup:['backup','restoreBackup','export','back']
+};
+function addActivity(message){
+  activityLog.push({time:new Date().toLocaleTimeString('ar-IQ'), page:active, message});
+}
+function showNotReady(){
+  alert(actionLabels.notReady);
+}
+function resolveStatusFromAction(action){
+  if(['delete','cancel','cancelTransfer','restoreBackup'].includes(action)) return '<span class="status danger">محدث</span>';
+  if(['post','approve','confirm','applyInventory','applyReturn','confirmDamaged','receiveTransfer'].includes(action)) return '<span class="status ok">معتمد</span>';
+  if(['sendTransfer'].includes(action)) return '<span class="status warn">معلق</span>';
+  return '<span class="status blue">تم التحديث</span>';
+}
+function updateRowState(action, rowIndex, pageType){
+  if(!tableRows[pageType] || Number.isNaN(rowIndex)) return;
+  const row = tableRows[pageType][rowIndex];
+  if(!row) return;
+  const statusCell = row.length - 1;
+  if(statusCell >= 0) row[statusCell] = resolveStatusFromAction(action);
+}
+function performAction(action, target){
+  const pageType = target?.dataset?.type || rootKeyForPage(active);
+  const rowId = Number(target?.dataset?.id);
+  const lockKey = `${action}:${pageType}:${Number.isNaN(rowId) ? 'all' : rowId}`;
+  if(actionLocks.has(lockKey)){
+    alert('تم تنفيذ العملية مسبقًا، حدّث الصفحة لإعادة التنفيذ.');
+    return;
+  }
+  const handledByMessageOnly = ['print','permission'];
+  const implemented = ['add','save','edit','cancel','clear','post','confirm','approve','sendTransfer','receiveTransfer','cancelTransfer','applyInventory','applyReturn','confirmDamaged','view','delete','export','backup','restoreBackup','switchUser'];
+  if(!implemented.includes(action)){
+    showNotReady();
+    return;
+  }
+  if(action === 'view'){
+    alert(`فتح تفاصيل ${pageLabelForKey(active)}.`);
+    addActivity(`تم عرض سجل في صفحة ${pageLabelForKey(active)}`);
+    return;
+  }
+  if(action === 'export'){
+    alert(`تم تجهيز تصدير بيانات ${pageLabelForKey(active)}.`);
+    addActivity(`تصدير بيانات ${pageLabelForKey(active)}`);
+    return;
+  }
+  if(handledByMessageOnly.includes(action)){
+    showNotReady();
+    return;
+  }
+  updateRowState(action, rowId, pageType);
+  actionLocks.add(lockKey);
+  const actionText = actionLabels[action] || action;
+  alert(`تم تنفيذ ${actionText} بنجاح.`);
+  addActivity(`تنفيذ ${actionText} في ${pageLabelForKey(active)}`);
+  render();
+}
 function buildTable(cols, rows, withPager=true){
-  return `<div class="table-card"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><div class="row-actions"><button class="btn small secondary">عرض</button><button class="btn small primary">تعديل</button></div></td></tr>`).join('')}</tbody></table></div>${withPager?`<div class="pager"><span>عدد السجلات: ${rows.length}</span><span>صفحة 1</span></div>`:''}</div>`;
+  const pageType = rootKeyForPage(active);
+  return `<div class="table-card"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map((r,i)=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><div class="row-actions"><button class="btn small secondary" data-action="view" data-type="${pageType}" data-id="${i}">عرض</button><button class="btn small primary" data-action="edit" data-type="${pageType}" data-id="${i}">تعديل</button><button class="btn small danger" data-action="delete" data-type="${pageType}" data-id="${i}">حذف</button></div></td></tr>`).join('')}</tbody></table></div>${withPager?`<div class="pager"><span>عدد السجلات: ${rows.length}</span><span>صفحة 1</span></div>`:''}</div>`;
 }
 
 function genericPage(key){
   const cfg = pageConfigs[key];
   const cols = tableColumns[key] || ['البيان','القيمة','الحالة','إجراءات'];
   const rows = tableRows[key] || [];
+  const toolbarActions = pageToolbars[key] || ['add','post','print','export','back'];
+  const actionClassMap = {
+    add:'primary',
+    save:'primary',
+    edit:'primary',
+    cancel:'warning',
+    clear:'secondary',
+    post:'success',
+    confirm:'success',
+    approve:'success',
+    sendTransfer:'warning',
+    receiveTransfer:'success',
+    cancelTransfer:'danger',
+    applyInventory:'success',
+    applyReturn:'success',
+    confirmDamaged:'danger',
+    view:'secondary',
+    delete:'danger',
+    export:'secondary',
+    print:'print',
+    backup:'warning',
+    restoreBackup:'danger',
+    switchUser:'secondary',
+    permission:'secondary',
+    back:'back'
+  };
   return `${pageHead(cfg)}
     <div class="summary-row">
       <div class="sum-card"><span>إجمالي السجلات</span><strong>${rows.length}</strong><small>حسب الفلتر الحالي</small></div>
@@ -687,7 +812,7 @@ function genericPage(key){
     </div>
     <div class="toolbar">
       <div class="tool-right"><input class="control search" placeholder="بحث..."><select class="control"><option>كل الحالات</option><option>نشط</option><option>مسودة</option><option>معلق</option></select><input class="control" type="date"></div>
-      <div class="tool-left"><button class="btn primary">＋ إضافة</button><button class="btn success">اعتماد / ترحيل</button><button class="btn print">طباعة / PDF</button><button class="btn secondary">تصدير</button><button class="btn back">رجوع</button></div>
+      <div class="tool-left">${toolbarActions.map(action=>`<button class="btn ${actionClassMap[action] || 'secondary'}" ${action==='back'?'data-nav-back="1"':`data-action="${action}"`} data-type="${key}">${action==='add'?'＋ ':''}${actionLabels[action] || action}</button>`).join('')}</div>
     </div>
     ${buildTable(cols, rows)}`;
 }
@@ -739,6 +864,7 @@ document.addEventListener('click', e=>{
 
   const pageOpt = e.target.closest('[data-page]');
   if(pageOpt){
+    previousPage = active;
     active = pageOpt.dataset.page;
     document.getElementById('flyout')?.classList.remove('open');
     render();
@@ -747,24 +873,46 @@ document.addEventListener('click', e=>{
 
   const jump = e.target.closest('[data-jump]');
   if(jump){
+    previousPage = active;
     active = jump.dataset.jump;
     document.getElementById('flyout')?.classList.remove('open');
     render();
     return;
   }
 
+  const navBack = e.target.closest('[data-nav-back]');
+  if(navBack){
+    const targetPage = previousPage || 'dashboard';
+    if(targetPage === active){
+      active = 'dashboard';
+    }else{
+      const current = active;
+      active = targetPage;
+      previousPage = current;
+    }
+    render();
+    return;
+  }
+
+  const buttonAction = e.target.closest('[data-action]');
+  if(buttonAction){
+    performAction(buttonAction.dataset.action, buttonAction);
+    return;
+  }
+
   if(e.target.closest('#sideSearch')){
-    alert('البحث السريع جاهز للربط لاحقًا مع قاعدة البيانات.');
+    showNotReady();
     return;
   }
 
   if(e.target.closest('[data-save-now]')){
-    alert('تم الحفظ التجريبي.');
+    performAction('save', {dataset:{type:rootKeyForPage(active)}});
     return;
   }
 
   if(e.target.closest('[data-logout]')){
-    alert('تسجيل الخروج جاهز للربط.');
+    alert('تم تسجيل الخروج بشكل تجريبي.');
+    addActivity('تسجيل خروج تجريبي');
     return;
   }
 
