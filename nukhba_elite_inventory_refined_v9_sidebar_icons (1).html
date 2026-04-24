@@ -562,6 +562,10 @@ const tableRows = {
 let active = 'dashboard';
 
 function sectionForPage(key){
+  const rootFromSpecialPage = rootKeyFromSpecialPage(key);
+  if(rootFromSpecialPage){
+    return sections.find(s => s.key === rootFromSpecialPage) || sections[0];
+  }
   return sections.find(s => s.key === key || (s.pages || []).some(p => p.key === key)) || sections[0];
 }
 function pageLabelForKey(key){
@@ -570,11 +574,59 @@ function pageLabelForKey(key){
   return pg ? pg.label : sec.label;
 }
 function rootKeyForPage(key){
+  const rootFromSpecialPage = rootKeyFromSpecialPage(key);
+  if(rootFromSpecialPage) return rootFromSpecialPage;
   return sectionForPage(key).key;
 }
 function pageDescriptionForKey(key){
   const root = rootKeyForPage(key);
   return (pageConfigs[root] || pageConfigs.dashboard).desc;
+}
+
+const sectionAddPages = {
+  items:'items_add',
+  warehouses:'warehouses_add',
+  suppliers:'suppliers_add',
+  inbound:'inbound_add',
+  outbound:'outbound_add',
+  transfers:'transfers_add',
+  inventory:'inventory_add',
+  returns:'returns_add',
+  damaged:'damaged_add',
+  users:'users_add'
+};
+
+const formTitleByRoot = {
+  items:'نموذج الصنف والتصنيف',
+  warehouses:'نموذج المخزن / الفرع',
+  suppliers:'نموذج المورد',
+  inbound:'نموذج مستند الوارد',
+  outbound:'نموذج مستند الصادر',
+  transfers:'نموذج التحويل',
+  inventory:'نموذج الجرد',
+  returns:'نموذج المرتجع',
+  damaged:'نموذج التلف / الخسائر',
+  users:'نموذج المستخدم والصلاحيات'
+};
+
+function rootKeyFromSpecialPage(key){
+  const matchedAddRoot = Object.keys(sectionAddPages).find(root => sectionAddPages[root] === key);
+  if(matchedAddRoot) return matchedAddRoot;
+  const editMatch = key.match(/^([a-z]+)_edit$/);
+  if(editMatch && sectionAddPages[editMatch[1]]) return editMatch[1];
+  return '';
+}
+function isAddPage(key){
+  return Object.values(sectionAddPages).includes(key);
+}
+function isEditPage(key){
+  return /_edit$/.test(key) && !!rootKeyFromSpecialPage(key);
+}
+function formPageKeyFor(root, mode){
+  return mode === 'edit' ? `${root}_edit` : (sectionAddPages[root] || `${root}_add`);
+}
+function pageLabelForForm(root, mode){
+  return mode === 'edit' ? `تعديل - ${pageConfigs[root]?.title || ''}` : `إضافة - ${pageConfigs[root]?.title || ''}`;
 }
 
 
@@ -656,7 +708,7 @@ function dashboard(){
       ['10:30','النظام','تهيئة واجهة المخزن','عام','<span class="status ok">مسجل</span>'],
       ['09:50','التحويل','تحويل بانتظار الاستلام','فرع الكرادة','<span class="status warn">معلق</span>'],
       ['09:10','الأصناف','تنبيه حد أدنى','المخزن الرئيسي','<span class="status danger">نقص</span>']
-    ], false)}</div>
+    ], 'dashboard', false)}</div>
   </div>
 
   <div class="section-card">
@@ -670,14 +722,15 @@ function dashboard(){
     </div>
   </div>`;
 }
-function buildTable(cols, rows, withPager=true){
-  return `<div class="table-card"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><div class="row-actions"><button class="btn small secondary">عرض</button><button class="btn small primary">تعديل</button></div></td></tr>`).join('')}</tbody></table></div>${withPager?`<div class="pager"><span>عدد السجلات: ${rows.length}</span><span>صفحة 1</span></div>`:''}</div>`;
+function buildTable(cols, rows, rootKey, withPager=true){
+  return `<div class="table-card"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><div class="row-actions"><button class="btn small secondary">عرض</button><button class="btn small primary" data-edit="${rootKey}">تعديل</button></div></td></tr>`).join('')}</tbody></table></div>${withPager?`<div class="pager"><span>عدد السجلات: ${rows.length}</span><span>صفحة 1</span></div>`:''}</div>`;
 }
 
 function genericPage(key){
   const cfg = pageConfigs[key];
   const cols = tableColumns[key] || ['البيان','القيمة','الحالة','إجراءات'];
   const rows = tableRows[key] || [];
+  const addTarget = sectionAddPages[key] || '';
   return `${pageHead(cfg)}
     <div class="summary-row">
       <div class="sum-card"><span>إجمالي السجلات</span><strong>${rows.length}</strong><small>حسب الفلتر الحالي</small></div>
@@ -687,9 +740,69 @@ function genericPage(key){
     </div>
     <div class="toolbar">
       <div class="tool-right"><input class="control search" placeholder="بحث..."><select class="control"><option>كل الحالات</option><option>نشط</option><option>مسودة</option><option>معلق</option></select><input class="control" type="date"></div>
-      <div class="tool-left"><button class="btn primary">＋ إضافة</button><button class="btn success">اعتماد / ترحيل</button><button class="btn print">طباعة / PDF</button><button class="btn secondary">تصدير</button><button class="btn back">رجوع</button></div>
+      <div class="tool-left"><button class="btn primary" ${addTarget?`data-add="${key}"`:''}>＋ إضافة</button><button class="btn success">اعتماد / ترحيل</button><button class="btn print">طباعة / PDF</button><button class="btn secondary">تصدير</button><button class="btn back">رجوع</button></div>
     </div>
-    ${buildTable(cols, rows)}`;
+    ${buildTable(cols, rows, key)}`;
+}
+
+function renderFormField(label, type='text', options=[]){
+  if(type === 'textarea'){
+    return `<div class="field full"><label>${label}</label><textarea class="form-control"></textarea></div>`;
+  }
+  if(type === 'select'){
+    return `<div class="field"><label>${label}</label><select class="form-control">${options.map(o=>`<option>${o}</option>`).join('')}</select></div>`;
+  }
+  if(type === 'date'){
+    return `<div class="field"><label>${label}</label><input class="form-control" type="date"></div>`;
+  }
+  if(type === 'number'){
+    return `<div class="field"><label>${label}</label><input class="form-control" type="number"></div>`;
+  }
+  return `<div class="field"><label>${label}</label><input class="form-control" type="${type}"></div>`;
+}
+
+function renderItemsTable(cols){
+  return `<div class="table-card" style="margin-top:12px"><div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody><tr>${cols.map(() => '<td>—</td>').join('')}</tr></tbody></table></div></div>`;
+}
+
+function sectionSpecificForm(root, mode){
+  const formTitle = formTitleByRoot[root] || 'نموذج';
+  const modeLabel = mode === 'edit' ? 'تعديل' : 'إضافة';
+  const commonTop = `${pageHead({title:formTitle, desc:`${modeLabel} بيانات ${pageConfigs[root]?.title || ''} وفق الحقول المعتمدة لهذا القسم فقط.`})}<div class="section-card"><div class="section-head"><h2>${modeLabel}</h2><small>${formTitle}</small></div><div class="section-body">`;
+  const end = `<div class="form-actions"><button class="btn primary">حفظ</button><button class="btn secondary" data-jump="${root}">إلغاء</button></div></div></div>`;
+
+  if(root === 'items'){
+    return `${commonTop}<div class="form-grid">${renderFormField('اسم الصنف')}${renderFormField('كود الصنف')}${renderFormField('الباركود')}${renderFormField('التصنيف','select',['اختر التصنيف'])}${renderFormField('الوحدة','select',['قطعة','كارتون'])}${renderFormField('سعر الشراء','number')}${renderFormField('الحد الأدنى للمخزون','number')}${renderFormField('المورد الرئيسي','select',['اختر المورد'])}${renderFormField('ملاحظات','textarea')}</div>${end}`;
+  }
+  if(root === 'warehouses'){
+    return `${commonTop}<div class="form-grid">${renderFormField('اسم المخزن / الفرع')}${renderFormField('النوع','select',['مخزن','فرع'])}${renderFormField('المسؤول')}${renderFormField('العنوان')}${renderFormField('الحالة','select',['نشط','معلق'])}${renderFormField('ملاحظات','textarea')}</div>${end}`;
+  }
+  if(root === 'suppliers'){
+    return `${commonTop}<div class="form-grid">${renderFormField('اسم المورد')}${renderFormField('الهاتف')}${renderFormField('هاتف بديل')}${renderFormField('العنوان')}${renderFormField('جهة الاتصال / المسؤول')}${renderFormField('الحالة','select',['نشط','معلق'])}${renderFormField('ملاحظات','textarea')}</div>${end}`;
+  }
+  if(root === 'inbound'){
+    return `${commonTop}<div class="form-grid">${renderFormField('رقم مستند الوارد')}${renderFormField('التاريخ','date')}${renderFormField('المورد','select',['اختر المورد'])}${renderFormField('المخزن','select',['المخزن الرئيسي'])}${renderFormField('ملاحظات','textarea')}</div>${renderItemsTable(['الصنف (بحث/اختيار)','الكود / الباركود','الكمية الحالية','الكمية الواردة','سعر الشراء','إجمالي السطر'])}${end}`;
+  }
+  if(root === 'outbound'){
+    return `${commonTop}<div class="form-grid">${renderFormField('رقم مستند الصادر')}${renderFormField('التاريخ','date')}${renderFormField('الجهة المستلمة')}${renderFormField('المخزن','select',['المخزن الرئيسي'])}${renderFormField('نوع الصادر','select',['تشغيلي','بيع','تحويل'])}${renderFormField('ملاحظات','textarea')}</div>${renderItemsTable(['الصنف (بحث/اختيار)','الكمية المتاحة الحالية','الكمية المصروفة','المتبقي بعد الصرف'])}${end}`;
+  }
+  if(root === 'transfers'){
+    return `${commonTop}<div class="form-grid">${renderFormField('المخزن المصدر','select',['المخزن الرئيسي'])}${renderFormField('المخزن الوجهة','select',['فرع الكرادة'])}${renderFormField('حالة التحويل','select',['مسودة','مرسل','مستلم'])}${renderFormField('ملاحظات','textarea')}</div><div class="alert-item warning" style="margin-top:10px"><div class="alert-ico">!</div><div><b>تحقق</b><span>يجب أن يختلف المخزن المصدر عن المخزن الوجهة.</span></div></div>${renderItemsTable(['الصنف','الكمية المتاحة في المصدر','كمية التحويل'])}${end}`;
+  }
+  if(root === 'inventory'){
+    return `${commonTop}<div class="form-grid">${renderFormField('المخزن','select',['المخزن الرئيسي'])}${renderFormField('نوع الجرد','select',['كامل','جزئي'])}${renderFormField('الحالة','select',['قيد التنفيذ','مغلق'])}</div>${renderItemsTable(['الصنف','كمية النظام','الكمية الفعلية','الفرق','ملاحظات'])}${end}`;
+  }
+  if(root === 'returns'){
+    return `${commonTop}<div class="form-grid">${renderFormField('مرجع المرتجع')}${renderFormField('مرجع الصادر الأصلي')}${renderFormField('المخزن','select',['المخزن الرئيسي'])}${renderFormField('الصنف','select',['اختر الصنف'])}${renderFormField('الكمية','number')}${renderFormField('حالة المرتجع','select',['صالح','غير صالح'])}${renderFormField('ملاحظات','textarea')}</div>${end}`;
+  }
+  if(root === 'damaged'){
+    return `${commonTop}<div class="form-grid">${renderFormField('المخزن','select',['المخزن الرئيسي'])}${renderFormField('الصنف','select',['اختر الصنف'])}${renderFormField('الكمية','number')}${renderFormField('السبب')}${renderFormField('التاريخ','date')}${renderFormField('ملاحظات','textarea')}</div>${end}`;
+  }
+  if(root === 'users'){
+    return `${commonTop}<div class="form-grid">${renderFormField('الاسم الكامل')}${renderFormField('اسم المستخدم')}${renderFormField('كلمة المرور','password')}${renderFormField('الدور','select',['مدير النظام','موظف مخزن'])}${renderFormField('المخزن / الفرع المخصص','select',['كل المخازن','المخزن الرئيسي','فرع الكرادة'])}${renderFormField('الحالة','select',['نشط','معلق'])}${renderFormField('ملاحظات','textarea')}</div>${end}`;
+  }
+
+  return genericPage(root);
 }
 
 function settingsPage(){
@@ -720,9 +833,12 @@ function settingsPage(){
 function render(){
   renderNav();
   const root = rootKeyForPage(active);
-  const cfg = pageConfigs[root] || pageConfigs.dashboard;
-  const title = pageLabelForKey(active);
+  const title = isAddPage(active) || isEditPage(active) ? pageLabelForForm(root, isEditPage(active) ? 'edit' : 'add') : pageLabelForKey(active);
   document.getElementById('crumbText').textContent = title;
+  if(isAddPage(active) || isEditPage(active)){
+    document.getElementById('page').innerHTML = sectionSpecificForm(root, isEditPage(active) ? 'edit' : 'add');
+    return;
+  }
   if(root === 'dashboard') document.getElementById('page').innerHTML = dashboard();
   else if(root === 'settings') document.getElementById('page').innerHTML = settingsPage();
   else document.getElementById('page').innerHTML = genericPage(root);
@@ -748,6 +864,24 @@ document.addEventListener('click', e=>{
   const jump = e.target.closest('[data-jump]');
   if(jump){
     active = jump.dataset.jump;
+    document.getElementById('flyout')?.classList.remove('open');
+    render();
+    return;
+  }
+
+  const addBtn = e.target.closest('[data-add]');
+  if(addBtn){
+    const root = addBtn.dataset.add;
+    active = formPageKeyFor(root, 'add');
+    document.getElementById('flyout')?.classList.remove('open');
+    render();
+    return;
+  }
+
+  const editBtn = e.target.closest('[data-edit]');
+  if(editBtn){
+    const root = editBtn.dataset.edit;
+    active = formPageKeyFor(root, 'edit');
     document.getElementById('flyout')?.classList.remove('open');
     render();
     return;
